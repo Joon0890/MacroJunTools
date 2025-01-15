@@ -1,0 +1,10 @@
+selenium
+chromedriver_autoinstaller
+instaloader
+requests
+python-dotenv
+pytesseract
+pyautogui
+keyboard
+pillow
+opencv-python
