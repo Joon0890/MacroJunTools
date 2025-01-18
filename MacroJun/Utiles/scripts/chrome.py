@@ -1,30 +1,20 @@
+import os
 import subprocess, shlex
-import chromedriver_autoinstaller
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait 
-from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
+import chromedriver_autoinstaller
+from selenium_stealth import stealth
 
 class ChromeDriverManager:
-    DEFAULT_OPTIONS = [
-        "--remote-debugging-port=9221",
-        "--no-first-run",
-        "--no-default-browser-check",
-        "--disable-extensions",
-        "--disable-plugins",
-        "--disable-infobars",
-        "--disable-blink-features=AutomationControlled",
-    ]
-
-    def __init__(self, desktop_flags: bool = True, close_flag: bool = True, headless_flag: bool = False):
-        self.desktop_flags = desktop_flags
+    def __init__(self, headless_flag: bool, close_flag: bool = True):
         self.close_flag = close_flag
         self.headless_flag = headless_flag
         self.browser = None
         self.__chrome_process = None
-        self._start_chrome_process()
+        if not self.headless_flag:
+            self._start_chrome_process()
         self.browser = self._initialize_webdriver()
-
+        self._apply_stealth()
+        
     def __enter__(self):
         """Returns the WebDriver instance when entering the context."""
         return self
@@ -35,15 +25,18 @@ class ChromeDriverManager:
             self._terminate_process()
 
     def _start_chrome_process(self):
-        program_files = "Program Files (x86)" if self.desktop_flags else "Program Files"
-        chrome_path = f"C:\\{program_files}\\Google\\Chrome\\Application\\chrome.exe"
-        chrome_command = f'"{chrome_path}" --remote-debugging-port=9222 --user-data-dir=tmp'
-
         try:
+            chrome_path = rf"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+            chrome_command = rf'{chrome_path} --remote-debugging-port=9222 --no-first-run'
             print(f"[INFO] Starting Chrome subprocess with command: {chrome_command}")
             self.__chrome_process = subprocess.Popen(shlex.split(chrome_command))
+
         except FileNotFoundError:
-            raise RuntimeError("[ERROR] Chrome executable not found.")
+            chrome_path = rf"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+            chrome_command = rf'{chrome_path} --remote-debugging-port=9222 --no-first-run'
+            print(f"[INFO] Starting Chrome subprocess with command: {chrome_command}")
+            self.__chrome_process = subprocess.Popen(shlex.split(chrome_command))
+
         except Exception as e:
             print(f"[ERROR] Failed to start Chrome subprocess: {e}")
             raise RuntimeError("[ERROR] Chrome process failed to start")
@@ -52,26 +45,41 @@ class ChromeDriverManager:
         print("[INFO] Initializing WebDriver...")
         chromedriver_autoinstaller.install()
         chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 
-        # 디버거 연결
-        chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+        if self.__chrome_process is not None:
+            chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
 
         # 헤드리스 모드 적용
         if self.headless_flag:
             print("[INFO] Enabling headless mode...")
             chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
             chrome_options.add_argument("--no-sandbox")
             chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--disable-gpu")
-            chrome_options.add_argument("--window-size=1920,1080")
 
         try:
             return webdriver.Chrome(options=chrome_options)
+            
         except Exception as e:
             print(f"[ERROR] Failed to initialize WebDriver: {e}")
             self._terminate_process()
             raise RuntimeError("WebDriver initialization failed.")
-
+    
+    def _apply_stealth(self):
+        try:
+            stealth(self.browser,
+                    languages=["en-US", "en"],
+                    vendor="Google Inc.",
+                    platform="Win32",
+                    webgl_vendor="Intel Inc.",
+                    renderer="Intel Iris OpenGL Engine",
+                    fix_hairline=True)
+            print("[INFO] Stealth settings successfully applied.")
+        except Exception as e:
+            print(f"[ERROR] Failed to apply stealth settings: {e}")
+            raise RuntimeError("Failed to apply stealth settings.")
+        
     def _terminate_process(self):
         if self.browser:
             try:
@@ -86,7 +94,7 @@ class ChromeDriverManager:
 
     def get_url(self, url: str, maximize_flag: bool = False, wait: int = 3):
         browser = self.get_browser()
-        if maximize_flag and not self.headless_flag:
+        if maximize_flag:
             browser.maximize_window()
         print(f"[INFO] Navigating to URL: {url}")
         browser.get(url)
@@ -96,13 +104,4 @@ class ChromeDriverManager:
         if not self.browser:
             raise RuntimeError("[ERROR] Browser is not initialized.")
         return self.browser
-
-
-def wait_for_element(browser, by, value, timeout=10):
-    """Waits for an element to appear and returns it."""
-    return WebDriverWait(browser, timeout).until(EC.presence_of_element_located((by, value)))
-
-def scroll_into_view(browser: webdriver.Chrome, element):
-    """Scrolls the browser to bring the element into view."""
-    SCROLL_SCRIPT = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
-    browser.execute_script(SCROLL_SCRIPT, element); sleep(1)
+    

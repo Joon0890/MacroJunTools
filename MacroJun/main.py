@@ -1,21 +1,21 @@
 import argparse
 from selenium.common.exceptions import NoSuchElementException
-from MacroJun.Utiles.utiles.chrome import ChromeDriverManager
-from MacroJun.Instagram.save_contents.image import save_images
-from MacroJun.Instagram.save_contents.video import save_videos
-from MacroJun.Instagram.managers.insta import collect_insta_contents
-from MacroJun.Instagram.managers.insta import login_insta
+from MacroJun.instagram.save_contents.image import save_images
+from MacroJun.instagram.save_contents.video import save_videos
+from MacroJun.instagram.managers.insta import collect_insta_contents
+from MacroJun.instagram.managers.insta import login_insta
 from MacroJun.sugang.managers.pyautogui_clicker import AutoImageClick
 from MacroJun.sugang.managers.find_location import FindImgLocation
-from MacroJun.Everytime.managers.articles import ArticleManager
-from MacroJun.Everytime.managers.autolike import AutoLikeManager
-from MacroJun.Everytime.managers.login import LoginManager
-from MacroJun.Utiles.utiles.delete_file import remove_duplicate_files
-from MacroJun.Utiles.utiles.config_loader import ConfigLoader
-from MacroJun.Utiles.utiles.transform import str_to_bool
-from MacroJun.Utiles.utiles.json_file import load_json
-from MacroJun.Utiles.utiles.json_file import save_json
-from MacroJun.Utiles.utiles.log import LogManager
+from MacroJun.everytime.managers.articles import ArticleManager
+from MacroJun.everytime.managers.autolike import AutoLikeManager
+from MacroJun.everytime.managers.login import LoginManager
+from MacroJun.utiles.scripts.chrome import ChromeDriverManager
+from MacroJun.utiles.scripts.delete_file import remove_duplicate_files
+from MacroJun.utiles.scripts.config_loader import ConfigLoader
+from MacroJun.utiles.scripts.transform import str_to_bool
+from MacroJun.utiles.scripts.json_file import load_json
+from MacroJun.utiles.scripts.json_file import save_json
+from MacroJun.utiles.scripts.log_csv import LogManager
 
 def insta_main():
     parser = argparse.ArgumentParser(description="Instagram Content Scraper")
@@ -24,7 +24,8 @@ def insta_main():
     parser.add_argument("--desktop", type=str_to_bool, required=True, help="True or False for desktop mode")
     parser.add_argument("--chrome_close", type=str_to_bool, default=True, help="True or False for Chrome closing")
     parser.add_argument("--headless", type=str_to_bool, required=False, help="True or False for headless mode")
-    parser.add_argument('--env', type=str, required=True, help='Path to .env file')
+    parser.add_argument('--my_id', type=str, required=True, help='Instagram username')
+    parser.add_argument('--my_password', type=str, required=True, help='Instagram password')
 
     args = parser.parse_args()
 
@@ -35,8 +36,7 @@ def insta_main():
         ) as manager:
 
         try:
-            config = ConfigLoader(dotenv_path=args.env)
-            login_insta(driver=manager.browser, keyword=args.keyword, **config)
+            login_insta(driver=manager.browser, keyword=args.keyword, my_id=args.my_id, my_password=args.my_password)
             link_list, video_list = collect_insta_contents(driver=manager.browser, contents_num=args.contents)
             
             save_images(link_list)

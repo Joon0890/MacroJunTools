@@ -1,7 +1,7 @@
 import os
 import instaloader
 
-def save_videos(video_list, output_path="insta_download"):
+def save_videos(video_list, output_path="D:/insta_download"):
     # Instaloader 인스턴스 생성
     instaloading = instaloader.Instaloader()
 

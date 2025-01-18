@@ -11,7 +11,7 @@ def calculate_file_hash(file_path):
             hasher.update(chunk)
     return hasher.hexdigest()
 
-def remove_duplicate_files(folder_path="insta_download"):
+def remove_duplicate_files(folder_path="D:/insta_download"):
     """
     폴더 내 중복 파일 제거.
     - folder_path: 탐색할 폴더 경로

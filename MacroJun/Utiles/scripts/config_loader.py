@@ -11,6 +11,6 @@ class ConfigLoader:
 
     def load_env(self, dotenv_path):
         load_dotenv(dotenv_path=dotenv_path)
-        self.config[""] = os.getenv("my_id")
+        self.config["my_id"] = os.getenv("my_id")
         self.config["my_password"] = os.getenv("my_password")
 

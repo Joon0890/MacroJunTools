@@ -15,7 +15,7 @@ def download_image(image_url, save_path):
     except Exception as e:
         print(f"Error downloading {image_url}: {e}")
 
-def save_images(link_list, output_path="insta_download", keyword=""):
+def save_images(link_list, output_path="D:/insta_download", keyword=""):
     img_num = 1
     if not os.path.exists(output_path):
         os.makedirs(output_path, exist_ok=True)  # 디렉토리가 존재하지 않으면 생성
