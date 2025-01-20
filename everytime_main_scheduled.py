@@ -1,3 +1,5 @@
+
+import os
 import time, random
 from MacroJun.utiles import LogManager
 from MacroJun.utiles import ConfigLoader
