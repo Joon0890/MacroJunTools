@@ -108,7 +108,7 @@ def sugang_main():
 
 
 def everytime_main():
-    parser = argparse.ArgumentParser(description="Instagram Content Scraper")
+    parser = argparse.ArgumentParser(description="Everytime Auto Like click")
     parser.add_argument("--desktop", type=str_to_bool, required=True, help="True or False for desktop mode")
     parser.add_argument("--chrome_close", type=str_to_bool, default=True, help="True or False for Chrome closing")
     parser.add_argument("--headless", type=str_to_bool, required=False, help="True or False for headless mode")
