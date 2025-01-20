@@ -129,7 +129,7 @@ def everytime_main():
             login.login_everytime(config=config_like)
             
             article = ArticleManager(browser=manager.get_browser(), log_manager=log)
-            article.move_to_article()
+            article.move_to_article(article_name="자유게시판")
             article.find_first_article()
             article.find_article_for_click()
             
