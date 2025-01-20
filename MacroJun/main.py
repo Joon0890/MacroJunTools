@@ -126,7 +126,7 @@ def everytime_main():
             manager.get_url(url="https://everytime.kr/", maximize_flag=True, wait=3)
             
             login = LoginManager(browser=manager.get_browser(), log_manager=log)
-            login.log_in(config=config_like)
+            login.login_everytime(config=config_like)
             
             article = ArticleManager(browser=manager.get_browser(), log_manager=log)
             article.move_to_article()
