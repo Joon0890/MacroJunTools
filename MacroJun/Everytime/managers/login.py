@@ -31,7 +31,7 @@ class LoginManager:
         
         except Exception as e:
             self.log_manager.log_error("LoginManager", "Error during login", selenium_error_transform(e))
-            raise
+            pass    
         
         else:
             self.log_manager.log_info("LoginManager", "completed login successfully.")
