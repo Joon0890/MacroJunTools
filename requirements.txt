@@ -8,3 +8,4 @@ pyautogui
 keyboard
 pillow
 opencv-python
+selenium_stealth
