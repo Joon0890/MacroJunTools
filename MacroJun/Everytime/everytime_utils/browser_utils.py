@@ -14,16 +14,12 @@ def navigate(browser: webdriver.Chrome, direction):
     """Navigates to the next or previous page."""
     global log
 
-    try:
-        pagination = browser.find_element(By.XPATH, "//div[@class='pagination']")
-        button = pagination.find_element(By.CLASS_NAME, direction)
-        scroll_into_view(browser, button)
-        button.click()
-        time.sleep(random.uniform(1, 2))
-
-    except Exception as e:
-        log.log_error("navigate", "Error while navigating", selenium_error_transform(e))
-
+    pagination = browser.find_element(By.XPATH, "//div[@class='pagination']")
+    button = pagination.find_element(By.CLASS_NAME, direction)
+    scroll_into_view(browser, button)
+    button.click()
+    time.sleep(random.uniform(1, 2))
+    
 def scroll_into_view(browser: webdriver.Chrome, element):
     """Scrolls the browser to bring the element into view."""
     SCROLL_SCRIPT = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"

@@ -24,6 +24,7 @@ class ArticleManager:
                 if a_tag.text == article_name:
                     a_tag.click()
                     time.sleep(random.uniform(2, 5))
+                    return
         except Exception as e:
             self.log_manager.log_error("move_to_article", "Error while navigating the article", selenium_error_transform(e))
 
@@ -42,7 +43,7 @@ class ArticleManager:
                             "Found the starting point for likes in the CSV file.", 
                             f"<{self.start_article}>"
                             )
-                        break
+                        return
         except Exception:
             self.log_manager.log_error("find_first_article", "Error while finding the first article")
 
@@ -74,15 +75,9 @@ class ArticleManager:
             raise
 
         except Exception as e:
-            self.log_manager.log_error(
-                "find_article_for_click", 
-                "Error while finding the first article for click",
-                selenium_error_transform(e)
-                )
+            self.log_manager.log_error("find_article_for_click", "Error while finding the first article for click", selenium_error_transform(e))
             raise
 
         else: 
-            self.log_manager.log_info(
-                "find_article_for_click", 
-                "Initial article navigation completed for clicking"
-                )
+            self.log_manager.log_info("find_article_for_click", "Initial article navigation completed for clicking")
+            return

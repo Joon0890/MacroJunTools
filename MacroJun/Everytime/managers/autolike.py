@@ -2,6 +2,7 @@ import time, random
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
+from selenium.common.exceptions import NoSuchElementException
 from MacroJun.utiles.scripts.log_csv import LogManager
 from MacroJun.utiles.scripts.transform import selenium_error_transform
 from MacroJun.everytime.everytime_utils.browser_utils import navigate
@@ -12,10 +13,9 @@ class AutoLikeManager:
     def __init__(self, browser: webdriver.Chrome, log_manager: LogManager):
         self.browser = browser
         self.log_manager = log_manager
-        self.page_num = 1
 
     def like_articles(self):
-        for _ in range(self.page_num):
+        while True:
             try:
                 changed_name = None
                 articles = initialize_articles(self.browser)
@@ -24,10 +24,11 @@ class AutoLikeManager:
                 while art_list:
                     articles = initialize_articles(self.browser)
                     first_article = articles[0].find_element(By.TAG_NAME, "h2").text
-                    print(f"[First Article]: {first_article}, [Articles Count]: {len(articles)}, [Art List Count]: {len(art_list)}")
                     if changed_name == first_article:
                         break
 
+                    print(f"[First Article]: {first_article}, [Articles Count]: {len(articles)}, [Art List Count]: {len(art_list)}")
+                    
                     for realname in reversed(art_list):
                         for article in reversed(articles):
                             changed_name = article.find_element(By.TAG_NAME, "h2").text
@@ -38,22 +39,29 @@ class AutoLikeManager:
                         break
 
                     if len(art_list) == 0:
+                        articles = initialize_articles(self.browser)
                         for art in articles:
                             if str(art.text.split('\n')[0]) == changed_name:
                                 break
                             else:
                                 art_list.append(str(art.text.split('\n')[0]))
-
-                self.log_manager.log_info("like_articles", "20 articles clicked successfully", f"completed {self.page_num} page.")
-                navigate(self.browser, "prev")
-
             except KeyboardInterrupt:
                 raise
 
             except Exception as e:
                 self.log_manager.log_error("like_articles", "General error", selenium_error_transform(e))
-
-        return self.log_manager.log_info("run", "Task completed")
+                pass
+            
+            else:
+                self.log_manager.log_info("like_articles", "20 articles clicked successfully")
+                try:
+                    navigate(self.browser, "prev")
+                except NoSuchElementException:
+                    self.log_manager.log_info("like_articles", "No 'prev' button found, task completed.")
+                    return
+                except Exception as e:
+                    self.log_manager.log_error("like_articles", "Unexpected error in navigate", selenium_error_transform(e))
+                    return
 
     def _handle_article_like(self, article, realname, art_list):
         """Handles the liking of an individual article."""

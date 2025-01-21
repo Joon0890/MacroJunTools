@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from MacroJun.utiles.scripts.log_csv import LogManager
+from selenium.common.exceptions import NoSuchElementException
 from MacroJun.utiles.scripts.transform import selenium_error_transform
 
 class LoginManager:
@@ -29,9 +30,13 @@ class LoginManager:
         except KeyboardInterrupt:
             raise
         
+        except NoSuchElementException:
+            return
+
         except Exception as e:
             self.log_manager.log_error("LoginManager", "Error during login", selenium_error_transform(e))
-            pass    
+            return     
         
         else:
             self.log_manager.log_info("LoginManager", "completed login successfully.")
+            return 
