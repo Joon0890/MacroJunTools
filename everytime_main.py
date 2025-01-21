@@ -9,7 +9,7 @@ from MacroJun.utiles import ChromeDriverManager
 log = LogManager()
 config_like = ConfigLoader("secrets/.env.Like")
 
-with ChromeDriverManager(headless_flag=True) as manager:
+with ChromeDriverManager(headless_flag=False) as manager:
     manager.get_url(url="https://everytime.kr/", maximize_flag=True)
 
     login = LoginManager(browser=manager.get_browser(), log_manager=log)

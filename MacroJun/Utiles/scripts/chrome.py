@@ -1,5 +1,4 @@
-import os
-import subprocess, shlex
+import subprocess, os
 from selenium import webdriver
 import chromedriver_autoinstaller
 from selenium_stealth import stealth
@@ -10,8 +9,7 @@ class ChromeDriverManager:
         self.headless_flag = headless_flag
         self.browser = None
         self.__chrome_process = None
-        if not self.headless_flag:
-            self._start_chrome_process()
+        self._start_chrome_process()
         self.browser = self._initialize_webdriver()
         self._apply_stealth()
         
@@ -26,17 +24,39 @@ class ChromeDriverManager:
 
     def _start_chrome_process(self):
         try:
-            chrome_path = rf"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-            chrome_command = rf'{chrome_path} --remote-debugging-port=9222 --no-first-run'
+            # Chrome 실행 경로 (기본 경로와 대체 경로를 리스트로 저장)
+            chrome_paths = [
+                r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+                r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+            ]
+            
+            # 실행할 Chrome 경로 설정
+            chrome_path = next(path for path in chrome_paths if os.path.exists(path))
+            
+            # Chrome 실행 명령어
+            chrome_command = [
+                chrome_path,
+                "--remote-debugging-port=9222",
+                "--headless" if self.headless_flag else "",  # 헤드리스 모드 (필요 시)
+                "--disable-gpu",  # GPU 비활성화
+                "--disable-dev-shm-usage",  # 공유 메모리 문제 해결
+                "--no-first-run",  # 첫 실행 설정 비활성화
+                "--user-data-dir=C:\\chrometemp"
+            ]
+            
+            # 빈 문자열 제거
+            chrome_command = [arg for arg in chrome_command if arg]
+            
             print(f"[INFO] Starting Chrome subprocess with command: {chrome_command}")
-            self.__chrome_process = subprocess.Popen(shlex.split(chrome_command))
+            
+            # Chrome 서브프로세스 실행
+            self.__chrome_process = subprocess.Popen(
+                chrome_command
+            )
 
-        except FileNotFoundError:
-            chrome_path = rf"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-            chrome_command = rf'{chrome_path} --remote-debugging-port=9222 --no-first-run'
-            print(f"[INFO] Starting Chrome subprocess with command: {chrome_command}")
-            self.__chrome_process = subprocess.Popen(shlex.split(chrome_command))
-
+        except StopIteration:
+            raise FileNotFoundError("[ERROR] Chrome executable not found in specified paths.")
+        
         except Exception as e:
             print(f"[ERROR] Failed to start Chrome subprocess: {e}")
             raise RuntimeError("[ERROR] Chrome process failed to start")
@@ -45,22 +65,12 @@ class ChromeDriverManager:
         print("[INFO] Initializing WebDriver...")
         chromedriver_autoinstaller.install()
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-
-        if self.__chrome_process is not None:
-            chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
-
-        # 헤드리스 모드 적용
-        if self.headless_flag:
-            print("[INFO] Enabling headless mode...")
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-
+        chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled") 
+        
         try:
             return webdriver.Chrome(options=chrome_options)
-            
+        
         except Exception as e:
             print(f"[ERROR] Failed to initialize WebDriver: {e}")
             self._terminate_process()
