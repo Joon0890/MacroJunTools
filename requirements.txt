@@ -3,9 +3,10 @@ chromedriver_autoinstaller
 instaloader
 requests
 python-dotenv
-pytesseract
 pyautogui
 keyboard
 pillow
 opencv-python
 selenium_stealth
+pyyaml
+python-pptx
