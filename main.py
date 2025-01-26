@@ -16,7 +16,7 @@ if __name__ == "__main__":
     insta_parser.add_argument("--contents", type=int, default=5, help="Number of posts to scrape")
     insta_parser.add_argument("--keyword", type=str, required=True, help="Tag name")
     insta_parser.add_argument("--chrome_close", type=bool, default=False, help="Close Chrome after running")
-    #insta_parser.add_argument("--headless", type=bool, required=False, help="Run in headless mode")
+    insta_parser.add_argument("--save_path", type=str, required=False, help="Run in headless mode")
 
     # Sugang
     sugang_parser = subparsers.add_parser("sugang", help="Run Sugang Tool")
@@ -27,8 +27,8 @@ if __name__ == "__main__":
 
     # Everytime
     everytime_parser = subparsers.add_parser("everytime", help="Run Everytime auto-like")
-    everytime_parser.add_argument("--chrome_close", type=bool, default=True, help="Close Chrome after running")
-    everytime_parser.add_argument("--headless", type=bool, required=False, help="Run in headless mode")
+    everytime_parser.add_argument("--auto-close", action="store_true", help="Close Chrome after running")
+    everytime_parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
     # 실행
     args = parser.parse_args()

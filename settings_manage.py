@@ -1,7 +1,7 @@
-from modules.utiles.scripts.env_utils import load_env, save_env
-from modules.utiles.scripts.config_utils import load_config, save_config
-from modules.utiles.scripts.env_utils import load_env
-from modules.utiles.scripts.config_utils import load_config
+from modules.utiles.files.env_utils import load_env, save_env
+from modules.utiles.files.config_utils import load_config, save_config
+from modules.utiles.files.env_utils import load_env
+from modules.utiles.files.config_utils import load_config
 
 def interactive_config():
     # 공통 설정

@@ -1,5 +1,5 @@
-from .chrome.chrome import ChromeDriverManager
-from .chrome.chrome_pythonanywhere import ChromeDriverPythonAnywhere
+from .chromedriver.chrome_manager import ChromeDriverManager
+from .chromedriver.chrome_pythonanywhere import ChromeDriverPythonAnywhere
 from .files.config_utils import ConfigLoader
 from .files.config_utils import save_config
 from .files.config_utils import load_config

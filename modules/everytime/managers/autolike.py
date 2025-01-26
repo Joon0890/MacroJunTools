@@ -14,16 +14,40 @@ class AutoLikeManager:
         self.browser = browser
         self.log_manager = log_manager
 
-    def like_articles(self):
-        while True:
+    @classmethod
+    def StartAutoLike(cls, context, start_article, page_num):
+        """팩토리 메서드: 인스턴스를 생성하고 로그인을 실행"""
+        instance = cls(context.browser, context.log_manager)
+        instance.__like_articles(start_article, page_num)
+        return instance
+    
+    @staticmethod
+    def create_art_list(articles, comparison_str):
+        art_list = []
+    
+        for article in articles:
+            if comparison_str == article.text.split('\n')[0]:
+                break
+            art_list.append(article.text.split('\n')[0])
+
+        return art_list
+    
+    @staticmethod
+    def return_title_of_article(article):
+        return article.find_element(By.TAG_NAME, "h2").text
+    
+    def __like_articles(self, start_article, page_num, changed_name = None):
+        for index in range(page_num):
             try:
-                changed_name = None
                 articles = initialize_articles(self.browser)
-                art_list = [article.text.split('\n')[0] for article in articles]
+                art_list = self.create_art_list(articles, start_article)
+            
                 print(f"[Art List]: {art_list}, [Changed Name]: {changed_name}")
+
                 while art_list:
                     articles = initialize_articles(self.browser)
-                    first_article = articles[0].find_element(By.TAG_NAME, "h2").text
+
+                    first_article = self.return_title_of_article(articles[0])
                     if changed_name == first_article:
                         break
 
@@ -31,20 +55,17 @@ class AutoLikeManager:
                     
                     for realname in reversed(art_list):
                         for article in reversed(articles):
-                            changed_name = article.find_element(By.TAG_NAME, "h2").text
+                            changed_name = self.return_title_of_article(article)
                             if changed_name == realname:
                                 print(f"[Article Name]: {changed_name}")
-                                self._handle_article_like(article, realname, art_list)
+                                self.__handle_article_like(article, realname, art_list)
                                 break
                         break
 
                     if len(art_list) == 0:
                         articles = initialize_articles(self.browser)
-                        for art in articles:
-                            if str(art.text.split('\n')[0]) == changed_name:
-                                break
-                            else:
-                                art_list.append(str(art.text.split('\n')[0]))
+                        art_list = self.create_art_list(articles, changed_name)
+
             except KeyboardInterrupt:
                 raise
 
@@ -53,17 +74,19 @@ class AutoLikeManager:
                 pass
             
             else:
-                self.log_manager.log_info("like_articles", "20 articles clicked successfully")
+                self.log_manager.log_info("like_articles", f"20 articles clicked successfully in {page_num-index} page")
                 try:
                     navigate(self.browser, "prev")
+
                 except NoSuchElementException:
                     self.log_manager.log_info("like_articles", "No 'prev' button found, task completed.")
                     return
+                
                 except Exception as e:
                     self.log_manager.log_error("like_articles", "Unexpected error in navigate", selenium_error_transform(e))
                     return
 
-    def _handle_article_like(self, article, realname, art_list):
+    def __handle_article_like(self, article, realname, art_list):
         """Handles the liking of an individual article."""
         scroll_into_view(self.browser, article)
         article.click()
@@ -71,11 +94,11 @@ class AutoLikeManager:
 
         article_name = self.browser.find_element(By.XPATH, "//h2[@class='large']").text
         self.log_manager.log_info("handle_article_like", "Article click completed", f"<{article_name}>")
-        self._like_button_click()
+        self.__like_button_click()
 
         art_list.remove(realname)
 
-    def _like_button_click(self):
+    def __like_button_click(self):
         """Clicks the like button and handles potential alerts."""
         like_button = self.browser.find_element(By.CLASS_NAME, "posvote")
         scroll_into_view(self.browser, like_button)

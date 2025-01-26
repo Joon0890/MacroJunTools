@@ -1,12 +1,8 @@
 import time, random
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from modules.everytime.utiles.log_csv import LogManager
-
-log = LogManager()
 
 def initialize_articles(browser: webdriver.Chrome):
-    """Retrieves the list of articles on the current page."""
     return browser.find_elements(By.XPATH, "//article[@class='list']")
 
 def navigate(browser: webdriver.Chrome, direction):

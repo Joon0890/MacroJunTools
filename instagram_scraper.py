@@ -2,7 +2,7 @@ import logging
 from modules.instagram import save_images
 from modules.instagram import save_videos
 from modules.instagram import login_insta
-from modules.instagram import collect_insta_contents
+from modules.instagram import collect_contents
 from modules.utiles import ChromeDriverManager
 from modules.utiles import remove_duplicate_files
 from modules.utiles import load_config, load_env
@@ -30,7 +30,7 @@ def insta_main(args):
     with ChromeDriverManager(close_flag=args.chrome_close, headless_flag=False) as manager:
         try:
             login_insta(manager.browser, args.keyword, my_id, my_password)
-            link_list, video_list = collect_insta_contents(manager.browser, scrape_limit)
+            link_list, video_list = collect_contents(manager.browser, scrape_limit)
 
             save_images(link_list)
             save_videos(video_list)

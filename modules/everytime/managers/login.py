@@ -10,11 +10,21 @@ class LoginManager:
     def __init__(self, browser: webdriver.Chrome, log_manager: LogManager):
         self.browser = browser
         self.log_manager = log_manager
-        self.log_manager.log_info("LoginManager", "The program starts and attempts to login.")
+        self.log_manager.log_info("LoginManager", "The program starts and attempts to login")
         
-    def login_everytime(self, my_id, my_password):
+    @classmethod
+    def create_with_login(cls, context, my_id, my_password):
+        """팩토리 메서드: 인스턴스를 생성하고 로그인을 실행"""
+        instance = cls(context.browser, context.log_manager)
+        instance.__login_everytime(my_id, my_password)
+        return instance
+    
+    def __login_everytime(self, my_id, my_password):
         """Logs in to the website."""
         try:    
+            if my_id is None or my_password is None:
+                self.log_manager.log_error("LoginManager", "Everytime ID and Password is None")
+                return  
             try: 
                 self.browser.find_element(By.CLASS_NAME, 'signin').click()
             except:
@@ -35,8 +45,8 @@ class LoginManager:
 
         except Exception as e:
             self.log_manager.log_error("LoginManager", "Error during login", selenium_error_transform(e))
-            return     
+            raise 
         
         else:
-            self.log_manager.log_info("LoginManager", "completed login successfully.")
+            self.log_manager.log_info("LoginManager", "completed login successfully")
             return 
