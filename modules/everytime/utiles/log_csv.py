@@ -3,11 +3,8 @@ import csv
 import datetime
 
 class LogManager:
-    def __init__(self, log_folder='./LikeLog/', log_file_name="everytime_autoLike_log.csv"):
-        self.log_path = os.path.abspath(log_folder)  # 절대 경로로 변환
-        if not os.path.exists(self.log_path):
-            os.makedirs(self.log_path)
-        self.log_file = os.path.join(self.log_path, log_file_name)
+    def __init__(self, log_file_name="everytime_autoLike_log.csv"):
+        self.log_file = os.path.join(os.getcwd(), log_file_name)
         
         # 파일이 없을 때 헤더 추가
         if not os.path.exists(self.log_file):

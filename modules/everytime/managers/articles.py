@@ -30,8 +30,6 @@ def process_articles(context):
     find_first_article와 find_article_for_click을 한 번에 처리하는 함수
     """
     start_article = __find_first_article(context)
-    if start_article is None:
-        return None
     return __find_article_for_click(context, start_article)
 
 def __find_first_article(context) -> str:

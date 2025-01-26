@@ -1,130 +1,191 @@
-import subprocess
-import os, sys
-from selenium import webdriver
+import os
+from subprocess import Popen
 import chromedriver_autoinstaller
-from selenium.webdriver.chrome.options import Options
 from selenium_stealth import stealth
+from selenium.webdriver import Chrome, ChromeOptions
 
+class ChromeSubprocessManager(Popen):
+    def __init__(self):
+        # 초기화 시 명령어를 전달하지 않고, None으로 설정
+        self._is_started = False  # 프로세스 시작 여부
+
+    def start_process(self, headless_flag: bool):
+        """
+        Starts the Chrome subprocess with the specified options.
+        """
+        if self._is_started:
+            print("[WARNING] Chrome subprocess is already running.")
+            return
+
+        print("[INFO] Starting Chrome subprocess...")
+
+        # Chrome 실행 경로
+        chrome_paths = [
+            r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+            r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+        ]
+
+        # 실행 가능한 경로 찾기
+        try:
+            chrome_path = next(path for path in chrome_paths if os.path.exists(path))
+        except StopIteration:
+            raise FileNotFoundError("[ERROR] Chrome executable not found in specified paths.")
+
+        # Chrome 실행 명령어
+        chrome_command = [
+            chrome_path,
+            "--remote-debugging-port=9222",
+            "--headless" if headless_flag else "",
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--no-first-run",
+            "--log-level=3"
+        ]
+        chrome_command = [arg for arg in chrome_command if arg]  # 빈 문자열 제거
+
+        # Popen 초기화
+        try:
+            super().__init__(chrome_command)  # Popen의 초기화 호출
+            self._is_started = True
+            print("[INFO] Chrome subprocess started successfully.")
+        except Exception as e:
+            raise RuntimeError(f"[ERROR] Failed to start Chrome subprocess: {e}")
+
+    def terminate_process(self):
+        """
+        Terminates the Chrome subprocess if running.
+        """
+        if not self._is_started:
+            print("[WARNING] No Chrome subprocess is running.")
+            return
+
+        try:
+            self.terminate()  # Popen의 terminate 메서드 호출
+            self.wait()  # 프로세스 종료 대기
+            print("[INFO] Chrome subprocess terminated successfully.")
+        except Exception as e:
+            print(f"[ERROR] Failed to terminate Chrome subprocess: {e}")
+        finally:
+            self._is_started = False
+
+class OptionsManager(ChromeOptions):
+    @classmethod
+    def initialize_options(cls):
+        """
+        Initialize ChromeOptions with predefined settings.
+        """
+        # ChromeDriver 설치 확인
+        chromedriver_autoinstaller.install()
+
+        # ChromeOptions 객체 생성
+        options = cls()  # cls()는 ChromeOptions의 서브클래스 인스턴스를 생성
+
+        # 옵션 설정
+        options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+
+        return options
+
+class WebDriverManager(Chrome):
+    def __init__(self, chrome_options: ChromeOptions):
+        """
+        Initialize the Chrome WebDriver with the given options.
+        """
+        # 부모 클래스의 초기화를 호출하여 WebDriver 설정
+        super().__init__(options=chrome_options)
+        print("[INFO] WebDriver initialized successfully.")
+
+    def navigate_to_url(self, url: str, is_maximizing: bool=True, wait: int=3):
+        """
+        Navigates the WebDriver to the specified URL.
+        """
+        try:
+            print(f"[INFO] Navigating to {url}...")
+            self.get(url)  # self를 WebDriver로 활용
+            if is_maximizing:
+                self.maximize_window()
+            self.implicitly_wait(wait)
+        except Exception as e:
+            print(f"[ERROR] Failed to navigate to {url}: {e}")
+            raise RuntimeError(f"Navigation to {url} failed.")
+
+    def terminate_browser(self):
+        """
+        Terminates the WebDriver if running.
+        """
+        try:
+            self.quit()  # Chrome(WebDriver)의 quit() 호출
+            print("[INFO] WebDriver terminated successfully.")
+        except Exception as e:
+            print(f"[ERROR] Failed to terminate WebDriver: {e}")
+
+class StealthManager:
+    def apply_stealth(self, browser: WebDriverManager):
+        try:
+            stealth(
+                browser,
+                languages=["en-US", "en"],
+                vendor="Google Inc.",
+                platform="Win32",
+                webgl_vendor="Intel Inc.",
+                renderer="Intel Iris OpenGL Engine",
+                fix_hairline=True
+            )
+            print("[INFO] Stealth settings applied.")
+        except Exception as e:
+            raise RuntimeError(f"[ERROR] Failed to apply stealth settings: {e}")
+        
 class ChromeDriverManager:
     def __init__(self):
-        self._browser = None
-        self._chrome_process = None
+        # 조합된 객체 초기화
+        self.subprocess_manager = ChromeSubprocessManager()
+        self.webdriver_manager = None  # WebDriverManager는 start 시점에 초기화
+        self.options_manager = OptionsManager()
+        self.stealth_manager = StealthManager()
+        self._is_running = False  # 실행 여부 확인용 플래그
 
     @property
     def browser(self):
-        if not self._browser:
+        if not self.webdriver_manager:
             raise RuntimeError("[ERROR] Browser is not initialized.")
-        return self._browser
+        return self.webdriver_manager
 
     @browser.setter
     def browser(self, value):
-        self._browser = value
-    
-    @classmethod
-    def initialize_browser_with_stealth(cls, headless_flag):
-        """팩토리 메서드: 인스턴스를 생성하고 로그인을 실행"""
-        instance = cls()
-        instance.__start_chrome_process(headless_flag)
-        instance._browser = instance.__initialize_webdriver()
-        __apply_stealth(instance._browser)
-        return instance
-    
-    def __start_chrome_process(self, headless_flag):
-        try:
-            print("[INFO] Starting chrome process...")
+        self.webdriver_manager = value
 
-            # Chrome 실행 경로 (기본 경로와 대체 경로를 리스트로 저장)
-            chrome_paths = [
-                r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-                r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-            ]
-            
-            # 실행할 Chrome 경로 설정
-            chrome_path = next(path for path in chrome_paths if os.path.exists(path))
-            
-            # Chrome 실행 명령어
-            chrome_command = [
-                chrome_path,
-                "--remote-debugging-port=9222",  # 디버깅 포트 설정
-                "--headless" if headless_flag else "",  # 헤드리스 모드 (필요 시)
-                "--disable-gpu",  # GPU 비활성화
-                "--disable-dev-shm-usage",  # 공유 메모리 문제 해결
-                "--no-first-run",  # 첫 실행 설정 비활성화
-                "--log-level=3"
-            ]
-            
-            # 빈 문자열 제거
-            chrome_command = [arg for arg in chrome_command if arg]
-            
-            print(f"[INFO] Starting Chrome subprocess with command: {chrome_command}")
-            
-            # Chrome 서브프로세스 실행
-            self._chrome_process = subprocess.Popen(chrome_command)
-
-        except StopIteration:
-            raise FileNotFoundError("[ERROR] Chrome executable not found in specified paths.")
+    def start(self, headless_flag: bool, url, is_maximizing: bool=True, wait: int=3):
+        """
+        Starts the Chrome subprocess and initializes the WebDriver.
+        """
+        if self._is_running:
+            print("[WARNING] ChromeDriverManager is already running.")
+            return
         
-        except Exception as e:
-            print(f"[ERROR] Failed to start Chrome subprocess: {e}")
-            raise RuntimeError("[ERROR] Chrome process failed to start")
+        # 1. Chrome 서브프로세스 시작
+        self.subprocess_manager.start_process(headless_flag=headless_flag)
 
-    def __initialize_webdriver(self) -> webdriver.Chrome:
-        print("[INFO] Initializing WebDriver...")
-        chromedriver_autoinstaller.install()
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
-        chrome_options.add_argument("--disable-blink-features=AutomationControlled") 
+        # 2. ChromeOptions 초기화
+        chrome_options = self.options_manager.initialize_options()
 
-        try: 
-            browser = webdriver.Chrome(options=chrome_options)
-            print(f"[INFO] Created browser instance with options: {chrome_options.arguments}")
-            return browser
+        # 3. WebDriver 초기화
+        self.webdriver_manager = WebDriverManager(chrome_options=chrome_options)
+        self.webdriver_manager.navigate_to_url(url, is_maximizing, wait)
+
+        # 4. Stealth 설정 적용
+        self.stealth_manager.apply_stealth(self.webdriver_manager)
+
+    def stop(self):
+        """
+        Stops the WebDriver and the Chrome subprocess.
+        """
+        if self._is_running:
+            print("[WARNING] ChromeDriverManager is already running.")
+            return
         
-        except Exception as e:
-            print(f"[ERROR] Unexpected error during WebDriver initialization: {e}")
-            self.terminate_process()
-            raise RuntimeError("WebDriver initialization failed.")
-        
-    def terminate_process(self):
-        # 브라우저 종료
-        if self._browser:
-            try:
-                self._browser.quit()
-                print("[INFO] WebDriver quit successfully.")
-            except Exception as e:
-                print(f"[WARNING] Failed to quit WebDriver: {e}")
-            finally:
-                self._browser = None  # 중복 종료 방지
+        if self.webdriver_manager:
+            self.webdriver_manager.terminate_browser()
+        self.subprocess_manager.terminate_process()
 
-        # Chrome 프로세스 종료
-        if self._chrome_process:
-            try:
-                self._chrome_process.terminate()
-                print("[INFO] Chrome process terminated successfully.")
-            except Exception as e:
-                print(f"[WARNING] Failed to terminate Chrome process: {e}")
-            finally:
-                self._chrome_process = None  # 중복 종료 방지
-
-    def get_url(self, url: str, maximize_flag: bool = False, wait: int = 3):
-        if maximize_flag:
-            print("[INFO] maximizing chrome window...")
-            self._browser.maximize_window()
-        
-        print(f"[INFO] Navigating to URL: {url}")
-        self._browser.get(url)  
-        self._browser.implicitly_wait(wait)
-    
-def __apply_stealth(browser):
-    try:
-        stealth(browser,
-            languages=["en-US", "en"],
-            vendor="Google Inc.",
-            platform="Win32",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True)
-        print("[INFO] Stealth settings successfully applied.")
-    except Exception as e:
-        print(f"[ERROR] Failed to apply stealth settings: {e}")
-        raise RuntimeError("Failed to apply stealth settings.")
+        self._is_running = False
+        print("[INFO] ChromeDriverManager stopped successfully.")
