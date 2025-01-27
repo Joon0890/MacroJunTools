@@ -1,47 +1,66 @@
-import logging
+import os
 import csv
+import logging
+from datetime import datetime
 
-# CSV 핸들러 정의
-class CSVLoggingHandler(logging.Handler):
-    def __init__(self, filename):
-        super().__init__()
+class CustomFormatter(logging.Formatter):
+    def __init__(self, fmt=None, datefmt=None, style='%', validate=True):
+        if not fmt:
+            fmt = "%(asctime)s - %(levelname)s - %(relpath)s:%(lineno)d - %(funcName)s - %(message)s"
+        super().__init__(fmt, datefmt, style, validate)  # 부모 클래스의 __init__ 호출
+
+    def format(self, record):
+        # record.pathname은 전체 경로
+        record.relpath = os.path.relpath(record.pathname)  # 상대경로 추가
+        return super().format(record)
+    
+    def formatTime(self, record, datefmt=None):
+        # 원하는 형식을 명시
+        datefmt = datefmt or '%Y-%m-%d %H:%M:%S'  # Default: YYYY-MM-DD HH:MM:SS,ms
+        ct = self.converter(record.created)  # 기본 시간 변환기 사용 (localtime)
+        return datetime.fromtimestamp(record.created).strftime(datefmt)
+
+class BaseFileHandler(logging.Handler):
+    def __init__(self, filename, mode='a', encoding='utf-8', level=logging.DEBUG):
+        super().__init__(level)
         self.filename = filename
-        self.file = open(filename, mode='a', newline='', encoding='utf-8')
-        self.writer = csv.writer(self.file)
-        # CSV 헤더 추가 (처음에만 추가)
-        self.writer.writerow(["Timestamp", "Level", "Message"])
-
-    def emit(self, record):
-        log_entry = self.format(record)
-        timestamp = self.formatTime(record)
-        level = record.levelname
-        message = record.msg
-        self.writer.writerow([timestamp, level, message])
+        self.file = open(filename, mode=mode, encoding=encoding, newline='')
 
     def close(self):
-        self.file.close()
+        if not self.file.closed:
+            self.file.close()
         super().close()
 
-# 로거 설정
-logger = logging.getLogger("DualLogger")
-logger.setLevel(logging.DEBUG)
+class FileLoggingHandler(BaseFileHandler):
+    def __init__(self, filename, mode='a', encoding=None, level=logging.DEBUG):
+        super().__init__(filename, mode, encoding, level)
 
-# 텍스트 로그 파일 핸들러
-text_file_handler = logging.FileHandler("app.log", mode="a", encoding="utf-8")
-text_file_handler.setLevel(logging.DEBUG)
-text_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+    def emit(self, record):
+        try:
+            formatted_message = self.formatter.format(record)  # 포맷된 메시지
+            self.file.write(formatted_message + "\n")
+            self.file.flush()  # 파일에 즉시 기록
+        except Exception:
+            self.handleError(record)
 
-# CSV 로그 파일 핸들러
-csv_file_handler = CSVLoggingHandler("app.csv")
-csv_file_handler.setLevel(logging.DEBUG)
+class CustomLogging(logging.Logger):
+    def __init__(self, name):
+        super().__init__(name)
+        self.setLevel(logging.DEBUG)
 
-# 로거에 핸들러 추가
-logger.addHandler(text_file_handler)
-logger.addHandler(csv_file_handler)
+    def add_handler(self, filename, fmt=None, mode='a', level=logging.DEBUG, encoding='utf-8'):
+        handler = FileLoggingHandler(filename, mode, level, encoding)
+        handler.setFormatter(CustomFormatter(fmt))
+        super().addHandler(handler)
+    
+if __name__=="__main__":
+    # 로거 설정
+    logger = CustomLogging("DualLogger")
+    logger.add_handler("app.log")
 
-# 로깅 테스트
-logger.debug("This is a debug message")
-logger.info("This is an info message")
-logger.warning("This is a warning message")
-logger.error("This is an error message")
-logger.critical("This is a critical message")
+    # 로깅 테스트
+    logger.debug("This is a debug message")
+    logger.info("This is an info message")
+    logger.warning("This is a warning message")
+    logger.error("This is an error message")
+    logger.critical("This is a critical message")

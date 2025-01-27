@@ -4,49 +4,66 @@ import chromedriver_autoinstaller
 from selenium_stealth import stealth
 from selenium.webdriver import Chrome, ChromeOptions
 
-class ChromeSubprocessManager(Popen):
-    def __init__(self):
-        # 초기화 시 명령어를 전달하지 않고, None으로 설정
-        self._is_started = False  # 프로세스 시작 여부
+chromeDrier_running = False  # 실행 여부 확인용 플래그
+DebugMode_started = False  # 프로세스 시작 여부
 
+# Chrome 실행 경로 목록
+CHROME_PATHS = [
+    r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+    r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+]
+
+# 기본 Chrome 실행 옵션
+DEFAULT_OPTIONS = [
+    "--remote-debugging-port=9222",
+    "--disable-gpu",
+    "--disable-dev-shm-usage",
+    "--no-first-run",
+    "--log-level=3"
+]
+
+def apply_stealth(browser: Chrome):
+    try:
+        stealth(
+            browser,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True
+        )
+        print("[INFO] Stealth settings applied.")
+    except Exception as e:
+        raise RuntimeError(f"[ERROR] Failed to apply stealth settings: {e}")
+    
+class ChromeSubprocessManager(Popen):
     def start_process(self, headless_flag: bool):
         """
         Starts the Chrome subprocess with the specified options.
         """
-        if self._is_started:
+        if DebugMode_started:
             print("[WARNING] Chrome subprocess is already running.")
             return
 
         print("[INFO] Starting Chrome subprocess...")
 
-        # Chrome 실행 경로
-        chrome_paths = [
-            r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-            r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-        ]
-
         # 실행 가능한 경로 찾기
         try:
-            chrome_path = next(path for path in chrome_paths if os.path.exists(path))
+            chrome_path = next(path for path in CHROME_PATHS if os.path.exists(path))
         except StopIteration:
             raise FileNotFoundError("[ERROR] Chrome executable not found in specified paths.")
 
-        # Chrome 실행 명령어
-        chrome_command = [
-            chrome_path,
-            "--remote-debugging-port=9222",
-            "--headless" if headless_flag else "",
-            "--disable-gpu",
-            "--disable-dev-shm-usage",
-            "--no-first-run",
-            "--log-level=3"
-        ]
+        chrome_command = [chrome_path] + DEFAULT_OPTIONS
+        if headless_flag:
+            chrome_command.append("--headless")
+
         chrome_command = [arg for arg in chrome_command if arg]  # 빈 문자열 제거
 
         # Popen 초기화
         try:
             super().__init__(chrome_command)  # Popen의 초기화 호출
-            self._is_started = True
+            DebugMode_started = True
             print("[INFO] Chrome subprocess started successfully.")
         except Exception as e:
             raise RuntimeError(f"[ERROR] Failed to start Chrome subprocess: {e}")
@@ -55,7 +72,7 @@ class ChromeSubprocessManager(Popen):
         """
         Terminates the Chrome subprocess if running.
         """
-        if not self._is_started:
+        if not DebugMode_started:
             print("[WARNING] No Chrome subprocess is running.")
             return
 
@@ -66,7 +83,7 @@ class ChromeSubprocessManager(Popen):
         except Exception as e:
             print(f"[ERROR] Failed to terminate Chrome subprocess: {e}")
         finally:
-            self._is_started = False
+            DebugMode_started = False
 
 class OptionsManager(ChromeOptions):
     @classmethod
@@ -119,30 +136,12 @@ class WebDriverManager(Chrome):
         except Exception as e:
             print(f"[ERROR] Failed to terminate WebDriver: {e}")
 
-class StealthManager:
-    def apply_stealth(self, browser: WebDriverManager):
-        try:
-            stealth(
-                browser,
-                languages=["en-US", "en"],
-                vendor="Google Inc.",
-                platform="Win32",
-                webgl_vendor="Intel Inc.",
-                renderer="Intel Iris OpenGL Engine",
-                fix_hairline=True
-            )
-            print("[INFO] Stealth settings applied.")
-        except Exception as e:
-            raise RuntimeError(f"[ERROR] Failed to apply stealth settings: {e}")
-        
 class ChromeDriverManager:
     def __init__(self):
         # 조합된 객체 초기화
         self.subprocess_manager = ChromeSubprocessManager()
         self.webdriver_manager = None  # WebDriverManager는 start 시점에 초기화
         self.options_manager = OptionsManager()
-        self.stealth_manager = StealthManager()
-        self._is_running = False  # 실행 여부 확인용 플래그
 
     @property
     def browser(self):
@@ -158,7 +157,7 @@ class ChromeDriverManager:
         """
         Starts the Chrome subprocess and initializes the WebDriver.
         """
-        if self._is_running:
+        if chromeDrier_running:
             print("[WARNING] ChromeDriverManager is already running.")
             return
         
@@ -173,13 +172,13 @@ class ChromeDriverManager:
         self.webdriver_manager.navigate_to_url(url, is_maximizing, wait)
 
         # 4. Stealth 설정 적용
-        self.stealth_manager.apply_stealth(self.webdriver_manager)
+        apply_stealth(self.webdriver_manager)
 
     def stop(self):
         """
         Stops the WebDriver and the Chrome subprocess.
         """
-        if self._is_running:
+        if chromeDrier_running:
             print("[WARNING] ChromeDriverManager is already running.")
             return
         
@@ -187,5 +186,7 @@ class ChromeDriverManager:
             self.webdriver_manager.terminate_browser()
         self.subprocess_manager.terminate_process()
 
-        self._is_running = False
+        chromeDrier_running = False
         print("[INFO] ChromeDriverManager stopped successfully.")
+
+    

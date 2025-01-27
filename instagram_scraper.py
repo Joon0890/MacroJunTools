@@ -27,23 +27,26 @@ def insta_main(args):
         return
     
     logging.info("Starting Instagram scraper...")
-    with ChromeDriverManager(close_flag=args.chrome_close, headless_flag=False) as manager:
-        try:
-            login_insta(manager.browser, args.keyword, my_id, my_password)
-            link_list, video_list = collect_contents(manager.browser, scrape_limit)
+    
+    try:
+        manager = ChromeDriverManager()
+        manager.start(headless_flag=False)
 
-            save_images(link_list)
-            save_videos(video_list)
+        login_insta(manager.browser, args.keyword, my_id, my_password)
+        link_list, video_list = collect_contents(manager.browser, scrape_limit)
 
-            logging.info("Image Links:")
-            for link in link_list:
-                logging.info(link)
+        save_images(link_list)
+        save_videos(video_list)
 
-            logging.info("Video Links:")
-            for video in video_list:
-                logging.info(video)
+        logging.info("Image Links:")
+        for link in link_list:
+            logging.info(link)
 
-            logging.info("Removing duplicate files...")
-            remove_duplicate_files()
-        except Exception as e:
-            logging.error(f"Error occurred in Instagram scraper: {e}")
+        logging.info("Video Links:")
+        for video in video_list:
+            logging.info(video)
+
+        logging.info("Removing duplicate files...")
+        remove_duplicate_files()
+    except Exception as e:
+        logging.error(f"Error occurred in Instagram scraper: {e}")
