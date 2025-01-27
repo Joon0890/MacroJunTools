@@ -3,13 +3,14 @@ from modules.everytime import move_to_board
 from modules.everytime import process_articles
 from modules.everytime import AutoLikeManager
 from modules.everytime import LoginManager
-from modules.everytime import LogManager
+from modules.everytime import CustomLogging
 from modules.everytime import BrowserContext
 from modules.utiles import ChromeDriverManager
 from modules.utiles import load_env
 
 def everytime_main(args):
-    log_manager = LogManager()
+    logger = CustomLogging("DualLogger")
+    logger.addHandler("app.log")
 
     # .env 파일 및 config.yaml 파일 불러오기
     env_values = load_env()
@@ -18,19 +19,19 @@ def everytime_main(args):
     my_id = env_values.get("EVERYTIME_USERNAME")
     my_password = env_values.get("EVERYTIME_PASSWORD")
 
-    print(f"[INFO] Everytime ID, Password: {my_id, my_password}")
+    logger.info(f"Everytime ID, Password: {my_id, my_password}")
     
     if not my_id or not my_password:
-        print("[ERROR] Instagram credentials are missing in .env file!")
+        logger.error("Instagram credentials are missing in .env file!")
         raise
     
-    print("[INFO] Starting Everytime auto-like...")
+    logger.info("Starting Everytime auto-like...")
     
     try:
         manager = ChromeDriverManager()
         manager.start(headless_flag=args.headless, url="https://everytime.kr/")
 
-        context = BrowserContext(manager.browser, log_manager)
+        context = BrowserContext(manager.browser, logger)
 
         LoginManager.create_with_login(context, my_id, my_password)
 
@@ -40,9 +41,9 @@ def everytime_main(args):
         AutoLikeManager.StartAutoLike(context, start_article, page_num)
             
     except KeyboardInterrupt:
-        print("[INFO] Program interrupted by user. Exiting gracefully.")
+        logger.info("Program interrupted by user. Exiting gracefully.")
     except Exception as e:
-        print(f"[ERROR] An unexpected error occurred: {e}")
+        logger.error(f"An unexpected error occurred: {e}")
 
     finally:
         if args.auto_close:

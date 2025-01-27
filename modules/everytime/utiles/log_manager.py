@@ -1,8 +1,19 @@
-import os
-import csv
-import logging
+import os, logging
 from datetime import datetime
 
+def read_logs(filename, encoding="ut8-8", num_lines=None) -> str:
+    try:
+        with open(filename, 'r', encoding=encoding) as log_file:
+            if num_lines is None:
+                return log_file.read()  # 전체 읽기
+            else:
+                # 마지막 num_lines만 읽기
+                return ''.join(log_file.readlines()[-num_lines:])
+    except FileNotFoundError:
+        return f"Log file '{filename}' not found."
+    except Exception as e:
+        return f"Error reading log file: {e}"
+        
 class CustomFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None, style='%', validate=True):
         if not fmt:
@@ -10,8 +21,10 @@ class CustomFormatter(logging.Formatter):
         super().__init__(fmt, datefmt, style, validate)  # 부모 클래스의 __init__ 호출
 
     def format(self, record):
-        # record.pathname은 전체 경로
-        record.relpath = os.path.relpath(record.pathname)  # 상대경로 추가
+        try:
+            record.relpath = os.path.relpath(record.pathname)
+        except ValueError:  # 경로가 잘못된 경우 대비
+            record.relpath = record.pathname
         return super().format(record)
     
     def formatTime(self, record, datefmt=None):
@@ -22,6 +35,9 @@ class CustomFormatter(logging.Formatter):
 
 class BaseFileHandler(logging.Handler):
     def __init__(self, filename, mode='a', encoding='utf-8', level=logging.DEBUG):
+        if mode not in ('a', 'w', 'x'):
+            raise ValueError("Invalid mode: Choose 'a', 'w', or 'x'")
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         super().__init__(level)
         self.filename = filename
         self.file = open(filename, mode=mode, encoding=encoding, newline='')
@@ -48,7 +64,10 @@ class CustomLogging(logging.Logger):
         super().__init__(name)
         self.setLevel(logging.DEBUG)
 
-    def add_handler(self, filename, fmt=None, mode='a', level=logging.DEBUG, encoding='utf-8'):
+    def addhandler(self, filename, fmt=None, mode='a', level=logging.DEBUG, encoding='utf-8'):
+        for handler in self.handlers:
+            if isinstance(handler, FileLoggingHandler) and handler.filename == filename:
+                return  # 이미 동일한 핸들러가 추가된 경우 무시
         handler = FileLoggingHandler(filename, mode, level, encoding)
         handler.setFormatter(CustomFormatter(fmt))
         super().addHandler(handler)
@@ -56,7 +75,7 @@ class CustomLogging(logging.Logger):
 if __name__=="__main__":
     # 로거 설정
     logger = CustomLogging("DualLogger")
-    logger.add_handler("app.log")
+    logger.addHandler("app.log")
 
     # 로깅 테스트
     logger.debug("This is a debug message")
