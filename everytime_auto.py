@@ -1,16 +1,15 @@
-import logging
+import sys
 from modules.everytime import move_to_board
-from modules.everytime import process_articles
-from modules.everytime import AutoLikeManager
-from modules.everytime import LoginManager
-from modules.everytime import CustomLogging
-from modules.everytime import BrowserContext
+from modules.everytime import find_starting_point
+from modules.everytime import login_everytime
+from modules.everytime import StartAutoLike
+from modules.utiles import GetLogger
 from modules.utiles import ChromeDriverManager
 from modules.utiles import load_env
+from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
 
 def everytime_main(args):
-    logger = CustomLogging("DualLogger")
-    logger.addHandler("app.log")
+    logger = GetLogger("everytime_autoLike.log")
 
     # .env 파일 및 config.yaml 파일 불러오기
     env_values = load_env()
@@ -19,7 +18,7 @@ def everytime_main(args):
     my_id = env_values.get("EVERYTIME_USERNAME")
     my_password = env_values.get("EVERYTIME_PASSWORD")
 
-    logger.info(f"Everytime ID, Password: {my_id, my_password}")
+    logger.info("Everytime ID, Password: %s, %s", my_id, my_password)
     
     if not my_id or not my_password:
         logger.error("Instagram credentials are missing in .env file!")
@@ -29,22 +28,27 @@ def everytime_main(args):
     
     try:
         manager = ChromeDriverManager()
-        manager.start(headless_flag=args.headless, url="https://everytime.kr/")
+        manager.start(headless=args.headless, url="https://everytime.kr/")
+        
+        # 크롬이 종료되었을 경우 예외 처리
+        if not manager.browser:
+            logger.error("Chrome browser failed to start.")
+            raise SystemExit("Chrome browser failed to start.")
 
-        context = BrowserContext(manager.browser, logger)
+        login_everytime(manager, my_id, my_password)
 
-        LoginManager.create_with_login(context, my_id, my_password)
+        move_to_board(manager, "자유게시판")
+        start_article, page_num = find_starting_point(manager, "everytime_autoLike.log")
 
-        move_to_board(context, "자유게시판")
-        start_article, page_num = process_articles(context)
+        logger.info("Starting from article: %s, page number: %s", start_article, page_num)
 
-        AutoLikeManager.StartAutoLike(context, start_article, page_num)
-            
-    except KeyboardInterrupt:
-        logger.info("Program interrupted by user. Exiting gracefully.")
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
+        StartAutoLike(manager, start_article, page_num)
 
-    finally:
-        if args.auto_close:
+    except NoSuchElementException as e:
+        logger.info("Element not found: %s. The task is complete.", e)
+        if manager:
             manager.stop()
+        logger.info("Exiting program as there are no more elements to process.")
+        sys.exit(0)  # 정상 종료
+
+

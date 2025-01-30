@@ -1,7 +1,7 @@
 import os, logging
 from datetime import datetime
 
-def read_logs(filename, encoding="ut8-8", num_lines=None) -> str:
+def read_logs(filename, encoding="utf-8", num_lines=None) -> str:
     try:
         with open(filename, 'r', encoding=encoding) as log_file:
             if num_lines is None:
@@ -17,6 +17,7 @@ def read_logs(filename, encoding="ut8-8", num_lines=None) -> str:
 class CustomFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None, style='%', validate=True):
         if not fmt:
+            #fmt = "%(asctime)s - %(levelname)s - %(funcName)s - %(message)s"
             fmt = "%(asctime)s - %(levelname)s - %(relpath)s:%(lineno)d - %(funcName)s - %(message)s"
         super().__init__(fmt, datefmt, style, validate)  # 부모 클래스의 __init__ 호출
 
@@ -34,11 +35,14 @@ class CustomFormatter(logging.Formatter):
         return datetime.fromtimestamp(record.created).strftime(datefmt)
 
 class BaseFileHandler(logging.Handler):
-    def __init__(self, filename, mode='a', encoding='utf-8', level=logging.DEBUG):
+    def __init__(self, filename, mode='a', encoding='utf-8'):
         if mode not in ('a', 'w', 'x'):
             raise ValueError("Invalid mode: Choose 'a', 'w', or 'x'")
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        super().__init__(level)
+        directory = os.path.dirname(filename)
+        if directory:  # 디렉토리가 비어 있지 않은 경우
+            os.makedirs(directory, exist_ok=True)
+
+        super().__init__()
         self.filename = filename
         self.file = open(filename, mode=mode, encoding=encoding, newline='')
 
@@ -48,8 +52,8 @@ class BaseFileHandler(logging.Handler):
         super().close()
 
 class FileLoggingHandler(BaseFileHandler):
-    def __init__(self, filename, mode='a', encoding=None, level=logging.DEBUG):
-        super().__init__(filename, mode, encoding, level)
+    def __init__(self, filename, mode='a', encoding='utf-8'):
+        super().__init__(filename, mode, encoding)
 
     def emit(self, record):
         try:
@@ -64,18 +68,18 @@ class CustomLogging(logging.Logger):
         super().__init__(name)
         self.setLevel(logging.DEBUG)
 
-    def addhandler(self, filename, fmt=None, mode='a', level=logging.DEBUG, encoding='utf-8'):
+    def addHandler(self, filename, fmt=None, mode='a', encoding='utf-8'):
         for handler in self.handlers:
             if isinstance(handler, FileLoggingHandler) and handler.filename == filename:
                 return  # 이미 동일한 핸들러가 추가된 경우 무시
-        handler = FileLoggingHandler(filename, mode, level, encoding)
+        handler = FileLoggingHandler(filename, mode, encoding)
         handler.setFormatter(CustomFormatter(fmt))
         super().addHandler(handler)
     
 if __name__=="__main__":
     # 로거 설정
     logger = CustomLogging("DualLogger")
-    logger.addHandler("app.log")
+    logger.addHandler("everytime_autoLike.log")
 
     # 로깅 테스트
     logger.debug("This is a debug message")

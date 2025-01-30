@@ -1,0 +1,267 @@
+2025-01-30 19:56:16 - INFO - everytime_auto.py:22 - everytime_main - Everytime ID, Password: ('kim0102483', 'junhee2483*')
+2025-01-30 19:56:16 - INFO - everytime_auto.py:28 - everytime_main - Starting Everytime auto-like...
+2025-01-30 19:56:16 - INFO - modules\utiles\chromedriver\chrome_manager.py:31 - start_process - Starting Chrome subprocess...
+2025-01-30 19:56:16 - INFO - modules\utiles\chromedriver\chrome_manager.py:45 - start_process - Chrome subprocess started.
+2025-01-30 19:56:17 - INFO - modules\utiles\chromedriver\chrome_manager.py:75 - start_driver - WebDriver initialized.
+2025-01-30 19:56:17 - INFO - modules\utiles\chromedriver\chrome_manager.py:86 - navigate_to - Navigating to https://everytime.kr/...
+2025-01-30 19:56:18 - INFO - modules\utiles\chromedriver\chrome_manager.py:107 - apply_stealth - Stealth settings applied.
+2025-01-30 19:56:28 - DEBUG - modules\everytime\scripts\autolike.py:134 - __like_articles - [Art List]: 우리학교 충북대됨?, 다들, 보통 재수해서 대학간 사람은 군대 언제감???, 살빼야되는데, 학점 고민있습니다, 아름다워, ., 9시 30분 터미널>교통대, 컴퓨터 싸게 사는 곳, ㅈ같다, ,, 다들 클럽 가봤어?, 학교에서, 제발, 다들 새해 복 많이 받으세요, 투표부탁, 학교인근 원룸에서 정문말고 이렇게 갈 수 있음??, 후문 한샘파크 여기 어떰??, 새해 복 많이 받으세요~!!, 제네시스가 벤츠 bmw 아우디보다 싼 느낌임?
+2025-01-30 19:56:29 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 20
+2025-01-30 19:56:32 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <제네시스가 벤츠 bmw 아우디보다 싼 느낌임?>
+2025-01-30 19:56:37 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 19
+2025-01-30 19:56:43 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <새해 복 많이 받으세요~!!>
+2025-01-30 19:56:47 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 18
+2025-01-30 19:56:53 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <후문 한샘파크 여기 어떰??>
+2025-01-30 19:56:58 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 17
+2025-01-30 19:57:02 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <학교인근 원룸에서 정문말고 이렇게 갈 수 있음??>
+2025-01-30 19:57:07 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 16
+2025-01-30 19:57:11 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <투표부탁>
+2025-01-30 19:57:17 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 15
+2025-01-30 19:57:22 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <다들 새해 복 많이 받으세요>
+2025-01-30 19:57:27 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 14
+2025-01-30 19:57:33 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <제발>
+2025-01-30 19:57:37 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 13
+2025-01-30 19:57:44 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <학교에서>
+2025-01-30 19:57:48 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 12
+2025-01-30 19:57:53 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <다들 클럽 가봤어?>
+2025-01-30 19:57:58 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 11
+2025-01-30 19:58:02 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <,>
+2025-01-30 19:58:06 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 10
+2025-01-30 19:58:11 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <ㅈ같다>
+2025-01-30 19:58:16 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 9
+2025-01-30 19:58:20 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <컴퓨터 싸게 사는 곳>
+2025-01-30 19:58:24 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 8
+2025-01-30 19:58:28 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <9시 30분 터미널>교통대>
+2025-01-30 19:58:32 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 7
+2025-01-30 19:58:39 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <.>
+2025-01-30 19:58:44 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 6
+2025-01-30 19:58:48 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <아름다워>
+2025-01-30 19:58:52 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 5
+2025-01-30 19:58:59 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <학점 고민있습니다>
+2025-01-30 19:59:03 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 4
+2025-01-30 19:59:10 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <살빼야되는데>
+2025-01-30 19:59:14 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 3
+2025-01-30 19:59:19 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <보통 재수해서 대학간 사람은 군대 언제감???>
+2025-01-30 19:59:24 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 2
+2025-01-30 19:59:29 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <다들>
+2025-01-30 19:59:35 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 우리학교 충북대됨?, [Articles Count]: 20, [Art List Count]: 1
+2025-01-30 19:59:40 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <우리학교 충북대됨?>
+2025-01-30 19:59:43 - INFO - modules\everytime\scripts\autolike.py:138 - __like_articles - 20 articles clicked successfully in 3 page
+2025-01-30 19:59:46 - DEBUG - modules\everytime\scripts\autolike.py:134 - __like_articles - [Art List]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, 이번 학업강화프로그램 하신분 쪽지부탁드립니다ㅠㅠ, 항공서비스의 이해, 우리학교, 설날 덕담, 충캠남 vs 길고양이, 교통대 석사 vs 철도대생, 얘들아 공부 좆나열심히해라, 원룸 웬만하면 제일 높은층에서 사는게 좋지??, 이번에 복학 하는데 맞팔할 사람, 후문에서 정문으로 내려올때 바람 많이 불어??, 학사경고 장학금, 칸예 팬들 봐주세요, Linc 현장실습, 2학년인데 교양, 학벌대결좀, 님들 난방비는 여름에는 안나가죠??, 원룸 관리비 20 받는다는데, 인디 노래, 전공선택 재수강
+2025-01-30 19:59:46 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 20
+2025-01-30 19:59:51 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <전공선택 재수강>
+2025-01-30 19:59:56 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 19
+2025-01-30 20:00:01 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <인디 노래>
+2025-01-30 20:00:06 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 18
+2025-01-30 20:00:12 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <원룸 관리비 20 받는다는데>
+2025-01-30 20:00:17 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 17
+2025-01-30 20:00:24 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <님들 난방비는 여름에는 안나가죠??>
+2025-01-30 20:00:28 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 16
+2025-01-30 20:00:33 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <학벌대결좀>
+2025-01-30 20:00:37 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 15
+2025-01-30 20:00:41 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <2학년인데 교양>
+2025-01-30 20:00:47 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 14
+2025-01-30 20:00:52 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <Linc 현장실습>
+2025-01-30 20:00:57 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 13
+2025-01-30 20:01:03 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <칸예 팬들 봐주세요>
+2025-01-30 20:01:07 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 12
+2025-01-30 20:01:12 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <학사경고 장학금>
+2025-01-30 20:01:16 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 11
+2025-01-30 20:01:21 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <후문에서 정문으로 내려올때 바람 많이 불어??>
+2025-01-30 20:01:27 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 10
+2025-01-30 20:01:33 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <이번에 복학 하는데 맞팔할 사람>
+2025-01-30 20:01:37 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 9
+2025-01-30 20:01:41 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <원룸 웬만하면 제일 높은층에서 사는게 좋지??>
+2025-01-30 20:01:45 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 8
+2025-01-30 20:01:51 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <얘들아 공부 좆나열심히해라>
+2025-01-30 20:01:57 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 7
+2025-01-30 20:02:03 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <교통대 석사 vs 철도대생>
+2025-01-30 20:02:08 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 6
+2025-01-30 20:02:14 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <충캠남 vs 길고양이>
+2025-01-30 20:02:19 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 5
+2025-01-30 20:02:25 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <설날 덕담>
+2025-01-30 20:02:29 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 4
+2025-01-30 20:02:35 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <우리학교>
+2025-01-30 20:02:39 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 3
+2025-01-30 20:02:46 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <항공서비스의 이해>
+2025-01-30 20:02:50 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 2
+2025-01-30 20:02:55 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <이번 학업강화프로그램 하신분 쪽지부탁드립니다ㅠㅠ>
+2025-01-30 20:02:59 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 벌레 이슈 없는 집 찾습니다ㅠㅠ, [Articles Count]: 20, [Art List Count]: 1
+2025-01-30 20:03:04 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <벌레 이슈 없는 집 찾습니다ㅠㅠ>
+2025-01-30 20:03:09 - INFO - modules\everytime\scripts\autolike.py:138 - __like_articles - 20 articles clicked successfully in 2 page
+2025-01-30 20:03:13 - DEBUG - modules\everytime\scripts\autolike.py:134 - __like_articles - [Art List]: 대학로에, "친해지고 싶다" 이게 적절한 생각임?, 전기과, 테드바이오, 나 하관맨인데, 전과생 아닌데, 학교 민원받는 부서 전화기 전면 교체예정, 학교농협 엔화 환전됨?, 친구 생일 선물, 터미널에서 학교정문까지 택시비요금 질문이요!!, 편입할까... 군대 육군가는데 공부 할까.., 대원기숙사, 물2 화2 교양, 똥쌌는데, 축구할사람, 원룸 양도글, 본인이 대학원생이거나, 후문 뭔소리냐, 야간2개...., 너네는
+2025-01-30 20:03:13 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 20
+2025-01-30 20:03:17 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <너네는>
+2025-01-30 20:03:22 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 19
+2025-01-30 20:03:27 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <야간2개....>
+2025-01-30 20:03:31 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 18
+2025-01-30 20:03:35 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <후문 뭔소리냐>
+2025-01-30 20:03:40 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 17
+2025-01-30 20:03:46 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <본인이 대학원생이거나>
+2025-01-30 20:03:51 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 16
+2025-01-30 20:03:56 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <원룸 양도글>
+2025-01-30 20:04:00 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 15
+2025-01-30 20:04:04 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <축구할사람>
+2025-01-30 20:04:09 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 14
+2025-01-30 20:04:16 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <똥쌌는데>
+2025-01-30 20:04:20 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 13
+2025-01-30 20:04:27 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <물2 화2 교양>
+2025-01-30 20:04:31 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 12
+2025-01-30 20:04:37 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <대원기숙사>
+2025-01-30 20:04:42 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 11
+2025-01-30 20:04:49 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <편입할까... 군대 육군가는데 공부 할까..>
+2025-01-30 20:04:53 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 10
+2025-01-30 20:05:00 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <터미널에서 학교정문까지 택시비요금 질문이요!!>
+2025-01-30 20:05:04 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 9
+2025-01-30 20:05:08 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <친구 생일 선물>
+2025-01-30 20:05:13 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 8
+2025-01-30 20:05:19 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <학교농협 엔화 환전됨?>
+2025-01-30 20:05:25 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 7
+2025-01-30 20:05:30 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <학교 민원받는 부서 전화기 전면 교체예정>
+2025-01-30 20:05:34 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 6
+2025-01-30 20:05:39 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <전과생 아닌데>
+2025-01-30 20:05:44 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 5
+2025-01-30 20:05:48 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <나 하관맨인데>
+2025-01-30 20:05:53 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 4
+2025-01-30 20:05:57 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <테드바이오>
+2025-01-30 20:06:02 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 3
+2025-01-30 20:06:07 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <전기과>
+2025-01-30 20:06:12 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 2
+2025-01-30 20:06:16 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <"친해지고 싶다" 이게 적절한 생각임?>
+2025-01-30 20:06:21 - DEBUG - modules\everytime\scripts\autolike.py:104 - __Auto_articles_like - [First Article]: 대학로에, [Articles Count]: 20, [Art List Count]: 1
+2025-01-30 20:06:28 - INFO - modules\everytime\scripts\autolike.py:86 - __handle_article_like - Article click completed <대학로에>
+2025-01-30 20:06:32 - INFO - modules\everytime\scripts\autolike.py:138 - __like_articles - 20 articles clicked successfully in 1 page
+2025-01-30 20:06:35 - WARNING - modules\everytime\scripts\exception.py:29 - wrapper - Element not found, proceeding to the next step: Message: no such element: Unable to locate element: {"method":"css selector","selector":".prev"}
+  (Session info: chrome=132.0.6834.111); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00EA74A3+25091]
+	(No symbol) [0x00E2DC04]
+	(No symbol) [0x00D0B373]
+	(No symbol) [0x00D4F4DC]
+	(No symbol) [0x00D4F65B]
+	(No symbol) [0x00D44F21]
+	(No symbol) [0x00D71F54]
+	(No symbol) [0x00D44E44]
+	(No symbol) [0x00D721A4]
+	(No symbol) [0x00D8B49E]
+	(No symbol) [0x00D71CA6]
+	(No symbol) [0x00D431D5]
+	(No symbol) [0x00D4435D]
+	GetHandleVerifier [0x011A07C3+3142947]
+	GetHandleVerifier [0x011B1A2B+3213195]
+	GetHandleVerifier [0x011AC412+3191154]
+	GetHandleVerifier [0x00F48720+685184]
+	(No symbol) [0x00E36E1D]
+	(No symbol) [0x00E33E18]
+	(No symbol) [0x00E33FB6]
+	(No symbol) [0x00E266F0]
+	BaseThreadInitThunk [0x751F7BA9+25]
+	RtlInitializeExceptionChain [0x770FC28B+107]
+	RtlClearBits [0x770FC20F+191]
+
+2025-01-30 20:06:35 - ERROR - everytime_auto.py:52 - everytime_main - ChromeDriver connection lost: Message: no such element: Unable to locate element: {"method":"css selector","selector":".prev"}
+  (Session info: chrome=132.0.6834.111); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00EA74A3+25091]
+	(No symbol) [0x00E2DC04]
+	(No symbol) [0x00D0B373]
+	(No symbol) [0x00D4F4DC]
+	(No symbol) [0x00D4F65B]
+	(No symbol) [0x00D44F21]
+	(No symbol) [0x00D71F54]
+	(No symbol) [0x00D44E44]
+	(No symbol) [0x00D721A4]
+	(No symbol) [0x00D8B49E]
+	(No symbol) [0x00D71CA6]
+	(No symbol) [0x00D431D5]
+	(No symbol) [0x00D4435D]
+	GetHandleVerifier [0x011A07C3+3142947]
+	GetHandleVerifier [0x011B1A2B+3213195]
+	GetHandleVerifier [0x011AC412+3191154]
+	GetHandleVerifier [0x00F48720+685184]
+	(No symbol) [0x00E36E1D]
+	(No symbol) [0x00E33E18]
+	(No symbol) [0x00E33FB6]
+	(No symbol) [0x00E266F0]
+	BaseThreadInitThunk [0x751F7BA9+25]
+	RtlInitializeExceptionChain [0x770FC28B+107]
+	RtlClearBits [0x770FC20F+191]
+
+2025-01-30 20:15:32 - INFO - everytime_auto.py:21 - everytime_main - Everytime ID, Password: kim0102483, junhee2483*
+2025-01-30 20:15:32 - INFO - everytime_auto.py:27 - everytime_main - Starting Everytime auto-like...
+2025-01-30 20:15:32 - INFO - modules\utiles\chromedriver\chrome_manager.py:31 - start_process - Starting Chrome subprocess...
+2025-01-30 20:15:32 - INFO - modules\utiles\chromedriver\chrome_manager.py:45 - start_process - Chrome subprocess started.
+2025-01-30 20:15:34 - INFO - modules\utiles\chromedriver\chrome_manager.py:75 - start_driver - WebDriver initialized.
+2025-01-30 20:15:34 - INFO - modules\utiles\chromedriver\chrome_manager.py:86 - navigate_to - Navigating to https://everytime.kr/...
+2025-01-30 20:15:35 - ERROR - modules\utiles\chromedriver\chrome_manager.py:92 - navigate_to - Failed to navigate to https://everytime.kr/: Message: unknown error: failed to change window state to 'normal', current state is 'maximized'
+  (Session info: chrome=132.0.6834.111)
+Stacktrace:
+	GetHandleVerifier [0x00D374A3+25091]
+	(No symbol) [0x00CBDC04]
+	(No symbol) [0x00B9B373]
+	(No symbol) [0x00B80552]
+	(No symbol) [0x00B7F06A]
+	(No symbol) [0x00B7D7AF]
+	(No symbol) [0x00C2DD68]
+	(No symbol) [0x00C01F0C]
+	(No symbol) [0x00C1B49E]
+	(No symbol) [0x00C01CA6]
+	(No symbol) [0x00BD31D5]
+	(No symbol) [0x00BD435D]
+	GetHandleVerifier [0x010307C3+3142947]
+	GetHandleVerifier [0x01041A2B+3213195]
+	GetHandleVerifier [0x0103C412+3191154]
+	GetHandleVerifier [0x00DD8720+685184]
+	(No symbol) [0x00CC6E1D]
+	(No symbol) [0x00CC3E18]
+	(No symbol) [0x00CC3FB6]
+	(No symbol) [0x00CB66F0]
+	BaseThreadInitThunk [0x751F7BA9+25]
+	RtlInitializeExceptionChain [0x770FC28B+107]
+	RtlClearBits [0x770FC20F+191]
+
+2025-01-30 20:15:35 - INFO - modules\utiles\chromedriver\chrome_manager.py:107 - apply_stealth - Stealth settings applied.
+2025-01-30 20:15:35 - INFO - modules\everytime\scripts\login.py:25 - login_everytime - Attempting to log in with ID: kim0102483
+2025-01-30 20:15:35 - INFO - modules\everytime\scripts\login.py:29 - login_everytime - Already logged in, skipping login process.
+2025-01-30 20:15:35 - INFO - modules\everytime\scripts\articles.py:24 - move_to_board - Navigating to board: 자유게시판
+2025-01-30 20:15:35 - INFO - modules\everytime\scripts\articles.py:32 - move_to_board - Board '자유게시판' found, clicking...
+2025-01-30 20:15:36 - INFO - modules\everytime\scripts\articles.py:35 - move_to_board - Waiting for 4.531353415248047 seconds after navigation...
+2025-01-30 20:15:37 - INFO - modules\everytime\scripts\exception.py:21 - wrapper - Program interrupted by the user. Exiting gracefully.
+2025-01-30 20:15:37 - INFO - modules\utiles\chromedriver\chrome_manager.py:55 - terminate_process - Chrome subprocess terminated.
+2025-01-30 20:15:37 - INFO - modules\utiles\chromedriver\chrome_manager.py:156 - stop - ChromeDriverManager stopped.
+2025-01-30 20:15:46 - INFO - everytime_auto.py:21 - everytime_main - Everytime ID, Password: kim0102483, junhee2483*
+2025-01-30 20:15:46 - INFO - everytime_auto.py:27 - everytime_main - Starting Everytime auto-like...
+2025-01-30 20:15:46 - INFO - modules\utiles\chromedriver\chrome_manager.py:31 - start_process - Starting Chrome subprocess...
+2025-01-30 20:15:46 - INFO - modules\utiles\chromedriver\chrome_manager.py:45 - start_process - Chrome subprocess started.
+2025-01-30 20:15:48 - INFO - modules\utiles\chromedriver\chrome_manager.py:75 - start_driver - WebDriver initialized.
+2025-01-30 20:15:48 - INFO - modules\utiles\chromedriver\chrome_manager.py:86 - navigate_to - Navigating to https://everytime.kr/...
+2025-01-30 20:15:49 - INFO - modules\utiles\chromedriver\chrome_manager.py:107 - apply_stealth - Stealth settings applied.
+2025-01-30 20:15:49 - INFO - modules\everytime\scripts\login.py:25 - login_everytime - Attempting to log in with ID: kim0102483
+2025-01-30 20:15:49 - INFO - modules\everytime\scripts\login.py:29 - login_everytime - Already logged in, skipping login process.
+2025-01-30 20:15:49 - INFO - modules\everytime\scripts\articles.py:24 - move_to_board - Navigating to board: 자유게시판
+2025-01-30 20:15:49 - INFO - modules\everytime\scripts\articles.py:32 - move_to_board - Board '자유게시판' found, clicking...
+2025-01-30 20:15:49 - INFO - modules\everytime\scripts\articles.py:35 - move_to_board - Waiting for 2.5413632698793167 seconds after navigation...
+2025-01-30 20:15:51 - INFO - modules\everytime\scripts\exception.py:21 - wrapper - Program interrupted by the user. Exiting gracefully.
+2025-01-30 20:15:51 - INFO - modules\utiles\chromedriver\chrome_manager.py:55 - terminate_process - Chrome subprocess terminated.
+2025-01-30 20:15:51 - INFO - modules\utiles\chromedriver\chrome_manager.py:156 - stop - ChromeDriverManager stopped.
+2025-01-30 20:15:56 - INFO - everytime_auto.py:21 - everytime_main - Everytime ID, Password: kim0102483, junhee2483*
+2025-01-30 20:15:56 - INFO - everytime_auto.py:27 - everytime_main - Starting Everytime auto-like...
+2025-01-30 20:15:56 - INFO - modules\utiles\chromedriver\chrome_manager.py:31 - start_process - Starting Chrome subprocess...
+2025-01-30 20:15:56 - INFO - modules\utiles\chromedriver\chrome_manager.py:45 - start_process - Chrome subprocess started.
+2025-01-30 20:15:57 - INFO - modules\utiles\chromedriver\chrome_manager.py:75 - start_driver - WebDriver initialized.
+2025-01-30 20:15:57 - INFO - modules\utiles\chromedriver\chrome_manager.py:86 - navigate_to - Navigating to https://everytime.kr/...
+2025-01-30 20:15:58 - INFO - modules\utiles\chromedriver\chrome_manager.py:107 - apply_stealth - Stealth settings applied.
+2025-01-30 20:15:58 - INFO - modules\everytime\scripts\login.py:25 - login_everytime - Attempting to log in with ID: kim0102483
+2025-01-30 20:15:58 - INFO - modules\everytime\scripts\login.py:29 - login_everytime - Already logged in, skipping login process.
+2025-01-30 20:15:58 - INFO - modules\everytime\scripts\articles.py:24 - move_to_board - Navigating to board: 자유게시판
+2025-01-30 20:15:58 - INFO - modules\everytime\scripts\articles.py:32 - move_to_board - Board '자유게시판' found, clicking...
+2025-01-30 20:15:58 - INFO - modules\everytime\scripts\articles.py:35 - move_to_board - Waiting for 4.926183364803693 seconds after navigation...
+2025-01-30 20:16:03 - INFO - modules\everytime\scripts\articles.py:109 - find_starting_point - Finding the starting point for auto-liking articles...
+2025-01-30 20:16:03 - INFO - modules\everytime\scripts\articles.py:48 - __find_first_article - Reading logs to find the starting article...
+2025-01-30 20:16:03 - WARNING - modules\everytime\scripts\articles.py:63 - __find_first_article - No matching articles found in logs.
+2025-01-30 20:16:03 - WARNING - modules\everytime\scripts\articles.py:115 - find_starting_point - No starting article found, starting from the first available page.
+2025-01-30 20:16:03 - INFO - modules\everytime\scripts\articles.py:74 - __find_article_for_click - Searching for starting article: None
+2025-01-30 20:16:03 - INFO - modules\everytime\scripts\articles.py:96 - __find_article_for_click - No starting article found, navigating 2 pages forward...
+2025-01-30 20:16:07 - INFO - modules\everytime\scripts\exception.py:21 - wrapper - Program interrupted by the user. Exiting gracefully.
+2025-01-30 20:16:07 - INFO - modules\utiles\chromedriver\chrome_manager.py:55 - terminate_process - Chrome subprocess terminated.
+2025-01-30 20:16:07 - INFO - modules\utiles\chromedriver\chrome_manager.py:156 - stop - ChromeDriverManager stopped.

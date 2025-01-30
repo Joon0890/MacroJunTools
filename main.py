@@ -27,7 +27,6 @@ if __name__ == "__main__":
 
     # Everytime
     everytime_parser = subparsers.add_parser("everytime", help="Run Everytime auto-like")
-    everytime_parser.add_argument("--auto-close", action="store_true", help="Close Chrome after running")
     everytime_parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
     # 실행
