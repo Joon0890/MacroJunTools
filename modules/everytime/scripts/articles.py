@@ -39,7 +39,7 @@ def move_to_board(manager: ChromeDriverManager, board_name: str) -> None:
         logger.warning("Board '%s' not found!", board_name)
 
     except Exception as e:
-        logger.error("Error navigating to board '%s': %s", board_name, e)
+        logger.error("Error navigating to board '%s': %s", board_name, selenium_error_transform(e))
 
 
 def __find_first_article(filename, encoding="utf-8", num_lines=None) -> str:

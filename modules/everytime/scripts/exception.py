@@ -2,7 +2,7 @@ import sys
 from functools import wraps
 from modules.utiles.logging.logging_utils import GetLogger
 from selenium.common.exceptions import NoSuchElementException, WebDriverException, NoSuchWindowException
-
+from modules.everytime.scripts.transform import selenium_error_transform
 logger = GetLogger()
 
 def exception_handler(logger):
@@ -26,10 +26,10 @@ def exception_handler(logger):
             
             except NoSuchElementException as e:
                 # The login method should continue even if an element is not found
-                logger.warning(f"Element not found, proceeding to the next step: {e}")
+                logger.warning(f"Element not found, proceeding to the next step: {selenium_error_transform(e)}")
             
             except (WebDriverException, NoSuchWindowException) as e:
-                logger.error(f"ChromeDriver connection lost: {e}")
+                logger.error(f"ChromeDriver connection lost: {selenium_error_transform(e)}")
                 manager = args[0] if hasattr(args[0], "stop") else None
                 if manager:
                     manager.stop()
