@@ -24,10 +24,6 @@ def login_everytime(
 
     logger.info("Attempting to log in with ID: %s", my_id)
 
-    logger.info("current url: %s", manager.browser.current_url)
-
-    logger.info("page source: %s", manager.browser.page_source)
-
     try:
         if manager.browser.find_element(By.ID, "submenu"):
             logger.info("Already logged in, skipping login process.")

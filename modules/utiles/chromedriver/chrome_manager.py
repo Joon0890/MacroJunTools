@@ -22,12 +22,6 @@ DEFAULT_OPTIONS = [
     "--window-size=1920,1080",
     "--disable-dev-shm-usage",
     "--no-first-run",
-<<<<<<< HEAD
-    "--log-level=3"
-=======
-    "--log-level=3",
-    "--user-data-dir=C:\\chrometmp"
->>>>>>> d57a27c32b1d6839a208d139c3e5ac76ff6c0b67
 ]               
 
 def find_available_port():
@@ -51,12 +45,7 @@ class ChromeSubprocessManager:
         chrome_command = [chrome_path] + args
         chrome_command.append(f"--remote-debugging-port={available_port}")
         if headless:
-<<<<<<< HEAD
             chrome_command.append("--headless=new") 
-=======
-            chrome_command.append("--headless")
->>>>>>> d57a27c32b1d6839a208d139c3e5ac76ff6c0b67
-        
         try:
             self.process = Popen(chrome_command, stdout=PIPE, stderr=PIPE)
             logger.info("Chrome subprocess started.")
@@ -155,10 +144,7 @@ class ChromeDriverManager:
             return
 
         try:
-<<<<<<< HEAD
             available_port = find_available_port()
-=======
->>>>>>> d57a27c32b1d6839a208d139c3e5ac76ff6c0b67
             self.subprocess_manager.start_process(available_port, DEFAULT_OPTIONS, headless)
             self.webdriver_manager.start_driver(available_port)
             self.webdriver_manager.navigate_to(url, maximize, wait)
