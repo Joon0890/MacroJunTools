@@ -7,7 +7,7 @@ from modules.utiles import GetLogger
 from modules.utiles import ChromeDriverManager
 from modules.utiles import load_env
 from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
-
+            
 def everytime_main(args):
     logger = GetLogger("everytime_autoLike.log")
 
@@ -17,7 +17,7 @@ def everytime_main(args):
     # .env에서 민감한 정보 가져오기
     my_id = env_values.get("EVERYTIME_USERNAME")
     my_password = env_values.get("EVERYTIME_PASSWORD")
-
+    
     logger.info("Everytime ID, Password: %s, %s", my_id, my_password)
     
     if not my_id or not my_password:

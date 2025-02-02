@@ -11,8 +11,6 @@ from modules.everytime.scripts.everytime_utils import initialize_articles
 from modules.utiles.logging.logger import read_logs
 from modules.utiles.logging.logging_utils import GetLogger
 from modules.everytime.scripts.exception import exception_handler
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from modules.utiles.chromedriver.chrome_manager import ChromeDriverManager
 
 logger = GetLogger()
@@ -39,7 +37,7 @@ def move_to_board(manager: ChromeDriverManager, board_name: str) -> None:
         logger.warning("Board '%s' not found!", board_name)
 
     except Exception as e:
-        logger.error("Error navigating to board '%s': %s", board_name, e)
+        logger.error("Error navigating to board '%s': %s", board_name, selenium_error_transform(e))
 
 
 def __find_first_article(filename, encoding="utf-8", num_lines=None) -> str:

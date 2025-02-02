@@ -1,5 +1,7 @@
 import os
 import sys
+import socket
+import pickle
 import logging
 from subprocess import Popen, PIPE
 import chromedriver_autoinstaller
@@ -16,18 +18,23 @@ CHROME_PATHS = [
 ]
 
 DEFAULT_OPTIONS = [
-    "--remote-debugging-port=9222",
     "--disable-gpu",
+    "--window-size=1920,1080",
     "--disable-dev-shm-usage",
     "--no-first-run",
     "--log-level=3"
-]
+]               
 
+def find_available_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('', 0))  # OS가 사용 가능한 포트를 자동 할당
+        return s.getsockname()[1]
+    
 class ChromeSubprocessManager:
     def __init__(self):
         self.process = None
 
-    def start_process(self, args, headless: bool):
+    def start_process(self, available_port, args, headless: bool):
         logger.info("Starting Chrome subprocess...")
         
         try:
@@ -37,9 +44,10 @@ class ChromeSubprocessManager:
             raise FileNotFoundError("Chrome executable not found.")
 
         chrome_command = [chrome_path] + args
+        chrome_command.append(f"--remote-debugging-port={available_port}")
         if headless:
-            chrome_command.append("--headless")
-
+            chrome_command.append("--headless=new") 
+        
         try:
             self.process = Popen(chrome_command, stdout=PIPE, stderr=PIPE)
             logger.info("Chrome subprocess started.")
@@ -64,10 +72,10 @@ class WebDriverManager:
     def __init__(self):
         self.browser = None
 
-    def start_driver(self):
+    def start_driver(self, available_port):
         chromedriver_autoinstaller.install()
         options = ChromeOptions()
-        options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+        options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
         options.add_argument("--disable-blink-features=AutomationControlled")
 
         try:
@@ -85,6 +93,7 @@ class WebDriverManager:
         try:
             logger.info("Navigating to %s...", url)
             self.browser.get(url)
+
             if maximize:
                 self.browser.maximize_window()
             self.browser.implicitly_wait(wait)
@@ -104,6 +113,7 @@ class WebDriverManager:
                 renderer="Intel Iris OpenGL Engine",
                 fix_hairline=True
             )
+            
             logger.info("Stealth settings applied.")
         except Exception as e:
             logger.warning("Failed to apply stealth settings: %s", e)
@@ -113,7 +123,6 @@ class WebDriverManager:
             self.browser.quit()
             logger.info("WebDriver terminated.")
             self.browser = None  # WebDriver 정리
-
 
 class ChromeDriverManager:
     def __init__(self):
@@ -137,8 +146,9 @@ class ChromeDriverManager:
             return
 
         try:
-            self.subprocess_manager.start_process(DEFAULT_OPTIONS, headless)
-            self.webdriver_manager.start_driver()
+            available_port = find_available_port()
+            self.subprocess_manager.start_process(available_port, DEFAULT_OPTIONS, headless)
+            self.webdriver_manager.start_driver(available_port)
             self.webdriver_manager.navigate_to(url, maximize, wait)
             self.webdriver_manager.apply_stealth()
             self.is_running = True

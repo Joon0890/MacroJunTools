@@ -9,7 +9,7 @@ def navigate(browser: webdriver.Chrome, direction):
     """Navigates to the next or previous page."""
     global log
 
-    pagination = browser.find_element(By.XPATH, "//div[@class='pagination']")
+    pagination = browser.find_element(By.CLASS_NAME, "pagination")
     button = pagination.find_element(By.CLASS_NAME, direction)
     scroll_into_view(browser, button)
     button.click()
