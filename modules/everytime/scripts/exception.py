@@ -29,7 +29,7 @@ def exception_handler(logger):
                 logger.warning(f"Element not found, proceeding to the next step: {selenium_error_transform(e)}")
             
             except (WebDriverException, NoSuchWindowException) as e:
-                logger.error(f"ChromeDriver connection lost: {e}")
+                logger.error(f"ChromeDriver connection lost: {selenium_error_transform(e)}")
                 manager = args[0] if hasattr(args[0], "stop") else None
                 if manager:
                     manager.stop()

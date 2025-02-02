@@ -7,6 +7,15 @@ from modules.utiles import GetLogger
 from modules.utiles import ChromeDriverManager
 from modules.utiles import load_env
 from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
+<<<<<<< HEAD
+=======
+import socket
+
+def find_available_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('', 0))  # OS가 사용 가능한 포트를 자동 할당
+        return s.getsockname()[1]
+>>>>>>> d57a27c32b1d6839a208d139c3e5ac76ff6c0b67
             
 def everytime_main(args):
     logger = GetLogger("everytime_autoLike.log")
@@ -27,8 +36,10 @@ def everytime_main(args):
     logger.info("Starting Everytime auto-like...")
     
     try:
+        available_port = find_available_port()
+
         manager = ChromeDriverManager()
-        manager.start(headless=args.headless, url="https://everytime.kr/")
+        manager.start(available_port, headless=args.headless, url="https://everytime.kr/")
         
         # 크롬이 종료되었을 경우 예외 처리
         if not manager.browser:
