@@ -138,7 +138,7 @@ class ChromeDriverManager:
     def browser(self, value):
         self.webdriver_manager.browser = value
 
-    def start(self, available_port, headless: bool, url, maximize: bool = True, wait: int = 3):
+    def start(self, headless: bool, url, maximize: bool = True, wait: int = 3):
         if self.is_running:
             logger.warning("ChromeDriverManager is already running.")
             return
