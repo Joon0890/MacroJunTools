@@ -14,9 +14,12 @@ logger = GetLogger()
 def login_everytime(
     manager: ChromeDriverManager, 
     my_id: Optional[str], 
-    my_password: Optional[str]
+    my_password: Optional[str],
+
 ) -> Optional[bool]:
     """Logs in to the website."""
+    if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
+        wait_time = random.uniform(2, 5)
 
     if not my_id or not my_password:
         logger.error("Everytime ID and Password are None")
@@ -55,9 +58,8 @@ def login_everytime(
     logger.info("Submitting login form...")
     password_elem.send_keys(Keys.ENTER)
 
-    sleep_time = random.uniform(2, 5)
-    logger.info("Waiting for %s seconds after login attempt...", sleep_time)
-    time.sleep(sleep_time)
+    logger.info("Waiting for %s seconds after login attempt...", wait_time)
+    time.sleep(wait_time)
 
     logger.info("Login process completed successfully.")
     return True

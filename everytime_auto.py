@@ -44,11 +44,15 @@ def everytime_main(args):
 
         StartAutoLike(manager, start_article, page_num)
 
-    except NoSuchElementException as e:
-        logger.info("Element not found: %s. The task is complete.", e)
+    except NoSuchElementException:
         if manager:
             manager.stop()
         logger.info("Exiting program as there are no more elements to process.")
         sys.exit(0)  # 정상 종료
+    
+    finally:
+        logger.info("The task is complete.")
+        if manager:
+            manager.stop()
 
 

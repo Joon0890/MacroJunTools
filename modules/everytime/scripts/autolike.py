@@ -1,6 +1,6 @@
 import time
 import random
-from typing import List
+from typing import List, Optional
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
@@ -24,7 +24,7 @@ def __create_art_list(articles: List[WebElement], comparison_str: str) -> List[s
 
     art_list = []
     for article in articles:
-        title = article.text.split('\n')[0]
+        title = article.text.splitlines()[0]
         if comparison_str == title:
             break
         art_list.append(title)
@@ -38,16 +38,18 @@ def __return_title_of_article(article: WebElement) -> str:
     logger.debug("Retrieved article title: %s", title)
     return title
 
-def __Alert_click(browser: Chrome) -> None:
+def __Alert_click(browser: Chrome, wait_time: Optional[int] = None) -> None:
     """Handles potential alerts after clicking like button."""
+    if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
+        wait_time = random.uniform(0.5, 1.5)
     try:
         alert = Alert(browser)
         logger.info("Alert detected, accepting...")
         alert.accept()
 
-        time.sleep(random.uniform(0.5, 1.5))
+        time.sleep(wait_time)
         alert.accept()
-        time.sleep(random.uniform(0.5, 1.5))
+        time.sleep(wait_time)
 
     except:
         logger.warning("No alert found.")
@@ -56,7 +58,7 @@ def __Alert_click(browser: Chrome) -> None:
     finally:
         logger.info("Returning to the previous page.")
         browser.back()
-        time.sleep(random.uniform(0.5, 1.5))
+        time.sleep(wait_time)
 
 def __like_button_click(browser: Chrome) -> None:
     """Clicks the like button and handles potential alerts."""
@@ -72,13 +74,21 @@ def __like_button_click(browser: Chrome) -> None:
     except Exception as e:
         logger.error("Failed to click like button: %s", e)
 
-def __handle_article_like(browser: Chrome, article: WebElement, realname, art_list: List) -> None:
+def __handle_article_like(
+    browser: Chrome, 
+    article: WebElement, 
+    art_name: str, 
+    art_list: List[str], 
+    wait_time: Optional[int] = None
+) -> None:
     """Handles the liking of an individual article."""
-    logger.info("Processing article: %s", realname)
+    if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
+        wait_time = random.uniform(2, 5)
 
+    logger.info("Processing article: %s", art_name)
+    
     scroll_into_view(browser, article)
     article.click()
-    wait_time = random.uniform(2, 5)
     logger.info("Clicked on article. Waiting for %s seconds before proceeding.", wait_time)
     time.sleep(wait_time)
 
@@ -86,8 +96,8 @@ def __handle_article_like(browser: Chrome, article: WebElement, realname, art_li
     logger.info("Article click completed: <%s>", article_name)
     __like_button_click(browser)
 
-    art_list.remove(realname)
-    logger.info("Removed %s from article list. Remaining articles: %s", realname, len(art_list))
+    art_list.remove(art_name)
+    logger.info("Removed %s from article list. Remaining articles: %s", art_name, len(art_list))
 
 def __Auto_articles_like(browser: Chrome, art_list: List[str], changed_name: str = None) -> None:
     """Iterates through articles and likes them."""

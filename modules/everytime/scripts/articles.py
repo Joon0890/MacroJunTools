@@ -1,7 +1,7 @@
 import re
 import time
 import random
-from functools import wraps
+from typing import Optional
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from modules.everytime.scripts.transform import selenium_error_transform
@@ -16,31 +16,33 @@ from modules.utiles.chromedriver.chrome_manager import ChromeDriverManager
 logger = GetLogger()
 
 @exception_handler(logger)
-def move_to_board(manager: ChromeDriverManager, board_name: str) -> None:
+def move_to_board(manager: ChromeDriverManager, board_name: str, wait_time: Optional[int] = None) -> None:
     """Navigates to the specified article board."""
 
     logger.info("Navigating to board: %s", board_name)
 
-    try:
-        submenu = manager.browser.find_element(By.ID, "submenu")
-        a_tags = submenu.find_elements(By.TAG_NAME, "a")
-        
-        for a_tag in a_tags:
-            if a_tag.text == board_name:
-                logger.info("Board '%s' found, clicking...", board_name)
-                a_tag.click()
-                wait_time = random.uniform(2, 5)
-                logger.info("Waiting for %s seconds after navigation...", wait_time)
-                time.sleep(wait_time)
-                return
-        
-        logger.warning("Board '%s' not found!", board_name)
+    if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
+        wait_time = random.uniform(2, 5)
 
-    except Exception as e:
-        logger.error("Error navigating to board '%s': %s", board_name, selenium_error_transform(e))
+    submenu = manager.browser.find_element(By.ID, "submenu")
+    a_tags = submenu.find_elements(By.TAG_NAME, "a")
+    
+    for a_tag in a_tags:
+        if a_tag.text == board_name:
+            logger.info("Board '%s' found, clicking...", board_name)
+            a_tag.click()
+            logger.info("Waiting for %s seconds after navigation...", wait_time)
+            time.sleep(wait_time)
+            return
+    
+    logger.warning("Board '%s' not found!", board_name)
 
-
-def __find_first_article(filename, encoding="utf-8", num_lines=None) -> str:
+def __find_first_article(
+    filename, 
+    encoding: str = "utf-8", 
+    num_lines: Optional[int] = None, 
+    pattern: Optional[str] = None
+) -> Optional[str]:
     """Finds the starting article for automation."""
 
     logger.info("Reading logs to find the starting article...")
@@ -51,28 +53,35 @@ def __find_first_article(filename, encoding="utf-8", num_lines=None) -> str:
             logger.error("Log file is empty or missing.")
             return None
         
-        for row in reversed(strLogs.split("\n")):
-            match = re.search(r"Article click completed: <([^<>]+)>", row)
+        for row in reversed(strLogs.splitlines()):
+            match = re.search(pattern, row)
             if match:
                 start_article = match.group(1)
                 logger.info("Found the starting point for likes in logs: %s", start_article)
                 return start_article
 
         logger.warning("No matching articles found in logs.")
-            
+        return None
+    
     except Exception as e:
         logger.error("Error while finding the first article: %s", e)
+        return None
+
+
+def __find_article_for_click(
+    browser: Chrome, 
+    start_article: str, 
+    default_forward_pages: int = 3, 
+    max_page_limit: int = 10
+) -> tuple[str, int]:
     
-    return None
-
-
-def __find_article_for_click(browser: Chrome, start_article: str, page_num: int = 3) -> tuple[str, int]:
     """Finds the article to start liking from."""
 
     logger.info("Searching for starting article: %s", start_article)
 
-    if start_article is not None:
+    if start_article:
         found = False
+        page_num = 1
 
         while not found:
             articles = initialize_articles(browser)
@@ -83,33 +92,40 @@ def __find_article_for_click(browser: Chrome, start_article: str, page_num: int 
                     found = True
                     break
 
-            if found or page_num >= 10:
+            if found or page_num >= max_page_limit:
                 break
 
             page_num += 1
             logger.info("Moving to page %s...", page_num)
             navigate(browser, "next")
-
+        return start_article, page_num
+    
     else:
-        logger.info("No starting article found, navigating %s pages forward...", page_num - 1)
-        for _ in range(page_num - 1):
-            navigate(browser, "next")
+        logger.info("No starting article found, navigating %s pages forward...", default_forward_pages - 1)
+        any(navigate(browser, "next") for _ in range(default_forward_pages - 1))
 
-    return start_article, page_num
-
+        return None, default_forward_pages
 
 @exception_handler(logger)
-def find_starting_point(manager: ChromeDriverManager, filename, encoding="utf-8", num_lines=None) -> "__find_article_for_click":
+def find_starting_point(
+    manager: ChromeDriverManager, 
+    filename, 
+    encoding: str = "utf-8", 
+    num_lines: Optional[int] = None, 
+    pattern: str = r"Article click completed: <([^<>]+)>",
+    default_forward_pages: int = 3, 
+    max_page_limit: int = 10
+) -> "__find_article_for_click":
     """
     Combines find_first_article and find_article_for_click into a single function.
     """
 
     logger.info("Finding the starting point for auto-liking articles...")
 
-    start_article = __find_first_article(filename, encoding, num_lines)
+    start_article = __find_first_article(filename, encoding, num_lines, pattern)
     if start_article:
         logger.info("Starting article found: %s", start_article)
     else:
         logger.warning("No starting article found, starting from the first available page.")
 
-    return __find_article_for_click(manager.browser, start_article)
+    return __find_article_for_click(manager.browser, start_article, default_forward_pages, max_page_limit)

@@ -27,6 +27,7 @@ def exception_handler(logger):
             except NoSuchElementException as e:
                 # The login method should continue even if an element is not found
                 logger.warning(f"Element not found, proceeding to the next step: {selenium_error_transform(e)}")
+                raise e
             
             except (WebDriverException, NoSuchWindowException) as e:
                 logger.error(f"ChromeDriver connection lost: {selenium_error_transform(e)}")
