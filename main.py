@@ -20,10 +20,10 @@ if __name__ == "__main__":
 
     # Sugang
     sugang_parser = subparsers.add_parser("sugang", help="Run Sugang Tool")
-    sugang_parser.add_argument("--find", action="store_true", help="Find image location")
     sugang_parser.add_argument("--auto-click", action="store_true", help="Auto-click mode")
     sugang_parser.add_argument("--imgpath", type=str, nargs='+', help="Path to image files")
     sugang_parser.add_argument("--confidence", type=float, default=0.95, help="Image detection confidence")
+    sugang_parser.add_argument("--wait-time", type=float, default=1, help="Image detection confidence")
 
     # Everytime
     everytime_parser = subparsers.add_parser("everytime", help="Run Everytime auto-like")

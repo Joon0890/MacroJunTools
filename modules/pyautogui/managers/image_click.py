@@ -30,7 +30,7 @@ def AutoImageClick(search, button, confidence=0.95, wait_time=2):
         locate_and_click(confidence=confidence, wait_time=wait_time, **button)
         
         if is_pressed():
-            return
+            break
 
 
 
