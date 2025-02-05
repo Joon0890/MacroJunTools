@@ -15,7 +15,7 @@ def login_everytime(
     manager: ChromeDriverManager, 
     my_id: Optional[str], 
     my_password: Optional[str],
-
+    wait_time: Optional[int] = None
 ) -> Optional[bool]:
     """Logs in to the website."""
     if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
