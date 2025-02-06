@@ -1,7 +1,7 @@
 import re
 import time
 import random
-from typing import Optional
+from typing import Optional, List
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from modules.everytime.scripts.transform import selenium_error_transform
@@ -53,13 +53,18 @@ def __find_first_article(
             logger.error("Log file is empty or missing.")
             return None
         
+        found_count = 0
+        start_article = []
+
         for row in reversed(strLogs.splitlines()):
             match = re.search(pattern, row)
             if match:
-                start_article = match.group(1)
-                logger.info("Found the starting point for likes in logs: %s", start_article)
-                return start_article
-
+                start_article_text = match.group(1)
+                logger.info("Found the starting point for likes in logs: %s", start_article_text)
+                start_article.append(start_article_text)
+                found_count += 1
+                if found_count >= 5:
+                    return start_article
         logger.warning("No matching articles found in logs.")
         return None
     
@@ -70,14 +75,14 @@ def __find_first_article(
 
 def __find_article_for_click(
     browser: Chrome, 
-    start_article: str, 
+    start_article: List[str], 
     default_forward_pages: int = 3, 
     max_page_limit: int = 10
 ) -> tuple[str, int]:
     
     """Finds the article to start liking from."""
 
-    logger.info("Searching for starting article: %s", start_article)
+    logger.info("Searching for starting article: %s", ', '.join(start_article))
 
     if start_article:
         found = False
@@ -87,8 +92,11 @@ def __find_article_for_click(
             articles = initialize_articles(browser)
             for article in articles:
                 scroll_into_view(browser, article)
-                if start_article in article.text:
-                    logger.info("Found matching article: %s", start_article)
+                article_text = article.find_element(By.TAG_NAME, "h2").text
+                found_word = next((word for word in start_article if word == article_text), None)
+
+                if found_word:
+                    logger.info("Found matching article: %s", found_word)
                     found = True
                     break
 
@@ -98,7 +106,7 @@ def __find_article_for_click(
             page_num += 1
             logger.info("Moving to page %s...", page_num)
             navigate(browser, "next")
-        return start_article, page_num
+        return found_word, page_num
     
     else:
         logger.info("No starting article found, navigating %s pages forward...", default_forward_pages - 1)
@@ -124,7 +132,7 @@ def find_starting_point(
 
     start_article = __find_first_article(filename, encoding, num_lines, pattern)
     if start_article:
-        logger.info("Starting article found: %s", start_article)
+        logger.info("Starting article found: %s", ', '.join(start_article))
     else:
         logger.warning("No starting article found, starting from the first available page.")
 

@@ -88,6 +88,3 @@ def load_settings(service: str):
 
     return settings
 
-if __name__=="__main__":
-    print(load_settings("instagram"))
-    #interactive_config()

@@ -13,10 +13,8 @@ if __name__ == "__main__":
 
     # Instagram
     insta_parser = subparsers.add_parser("instagram", help="Run Instagram scraper")
-    insta_parser.add_argument("--contents", type=int, default=5, help="Number of posts to scrape")
-    insta_parser.add_argument("--keyword", type=str, required=True, help="Tag name")
-    insta_parser.add_argument("--chrome_close", type=bool, default=False, help="Close Chrome after running")
-    insta_parser.add_argument("--save_path", type=str, required=False, help="Run in headless mode")
+    insta_parser.add_argument("--headless", action="store_true", help="Run in headless mode")
+    insta_parser.add_argument("--save-path", type=str, required=False, help="Run in headless mode")
 
     # Sugang
     sugang_parser = subparsers.add_parser("sugang", help="Run Sugang Tool")

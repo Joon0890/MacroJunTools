@@ -34,9 +34,7 @@ def __create_art_list(articles: List[WebElement], comparison_str: str) -> List[s
 
 def __return_title_of_article(article: WebElement) -> str:
     """Returns the title of the given article."""
-    title = article.find_element(By.TAG_NAME, "h2").text
-    logger.debug("Retrieved article title: %s", title)
-    return title
+    return article.find_element(By.TAG_NAME, "h2").text
 
 def __Alert_click(browser: Chrome, wait_time: Optional[int] = None) -> None:
     """Handles potential alerts after clicking like button."""

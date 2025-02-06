@@ -3,7 +3,7 @@ import instaloader
 import requests
 from datetime import datetime
 
-def save_videos(video_list, output_path="D:/insta_download"):
+def save_videos(username, article_id, video_list, output_path):
     # Instaloader 인스턴스 생성
     instaloading = instaloader.Instaloader()
 
@@ -28,8 +28,9 @@ def save_videos(video_list, output_path="D:/insta_download"):
             print(f"Downloading content from: {video}")
             for idx, node in enumerate(post.get_sidecar_nodes(), start=1):
                 if node.is_video:
+                    current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S.%f")
                     video_path = os.path.join(
-                        save_directory, f"{post.date_utc.strftime('%Y-%m-%d_%H-%M-%S')}_video{idx}.mp4"
+                        save_directory, f"{username}_{article_id}_{current_date}.mp4"
                     )
                     instaloading.download_pic(video_path, node.video_url, post.date_utc)
                     print(f"Video saved to {video_path}")
@@ -38,8 +39,9 @@ def save_videos(video_list, output_path="D:/insta_download"):
 
             # 단일 동영상 처리
             if post.is_video:
+                current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S.%f")
                 video_path = os.path.join(
-                    save_directory, f"{post.date_utc.strftime('%Y-%m-%d_%H-%M-%S')}.mp4"
+                    save_directory, f"{username}_{article_id}_{current_date}.mp4"
                 )
                 instaloading.download_pic(video_path, post.video_url, post.date_utc)
                 print(f"Video saved to {video_path}")
@@ -60,29 +62,25 @@ def download_image(image_url, save_path):
     except Exception as e:
         print(f"Error downloading {image_url}: {e}")
 
-def save_images(link_list, output_path="D:/insta_download", keyword=""):
-    img_num = 1
+def save_images(username, article_id, image_list, output_path):
     if not os.path.exists(output_path):
         os.makedirs(output_path, exist_ok=True)  # 디렉토리가 존재하지 않으면 생성
 
-    for image_url in link_list:
+    for image_url in image_list:
         try:
             # 현재 날짜와 시간 포맷
-            current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S.%f")
             # 이미지 이름 생성
-            if len(keyword)==0:
-                image_name = f"{current_date}_{img_num}.jpg"
-            else:
-                image_name = f"{keyword}_{current_date}_{img_num}.jpg"
-            img_num += 1
+            image_name = f"{username}_{article_id}_{current_date}.jpg"
 
             # 저장 경로 설정
             save_path = os.path.join(output_path, image_name)
 
-            # 이미지 다운로드
-            print(f"Downloading video from {image_url}...")
             download_image(image_url, save_path)
             print(f"Downloaded to {save_path}")
         except Exception as e:
             print(f"Failed to process {image_url}. Error: {e}")
 
+def save_img_video(username, article_id, image_list, video_list, output_path="D:/insta_download"):
+    save_images(username, article_id, image_list, output_path)
+    save_videos(username, article_id, video_list, output_path)
