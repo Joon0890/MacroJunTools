@@ -1,8 +1,8 @@
 import argparse
-from instagram_scraper import insta_main
-from sugang_tool import sugang_main
-from everytime_auto import everytime_main
-from settings_manage import interactive_config
+from modules.utiles import interactive_env
+from modules.everytime import run_everytime_auto_like
+from modules.instagram import run_instagram_scraper
+from modules.pyautogui import run_sugang_tool
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main Entry Point")
@@ -31,12 +31,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "setting":
-        interactive_config()
+        interactive_env()
     elif args.command == "instagram":
-        insta_main(args)
-    elif args.command == "sugang":
-        sugang_main(args)
+        run_instagram_scraper(headless=args.headless, save_path=args.save_path)
     elif args.command == "everytime":
-        everytime_main(args)
+        run_everytime_auto_like(headless=args.headless)
+    elif args.command == "sugang":
+        run_sugang_tool(auto_click=args.auto_click, imgpath=args.imgpath, confidence=args.confidence, wait_time=args.wait_time)
     else:
         parser.print_help()

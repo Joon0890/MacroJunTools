@@ -5,6 +5,7 @@ from .scripts.image_click import AutoImageClick
 from .scripts.text_click import AutoTextClick
 from .scripts.auto_clicker import CanvasAutoSave
 from .scripts.auto_clicker import YES24eBOOKAutoSave
-from .utiles.autoclick_utils import AutoClick
-from .utiles.autoclick_utils import is_pressed
-from .utiles.autoclick_utils import refresh
+from .scripts.autoclick_utils import AutoClick
+from .scripts.autoclick_utils import is_pressed
+from .scripts.autoclick_utils import refresh
+from .scripts.sugang_tool import run_sugang_tool

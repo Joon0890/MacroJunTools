@@ -1,14 +1,14 @@
 import sys
-from modules.everytime import move_to_board
-from modules.everytime import find_starting_point
-from modules.everytime import login_everytime
-from modules.everytime import StartAutoLike
-from modules.utiles import GetLogger
-from modules.utiles import ChromeDriverManager
-from modules.utiles import load_env
-from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
+from modules.everytime.scripts.articles import move_to_board
+from modules.everytime.scripts.articles import find_starting_point
+from modules.everytime.scripts.login import login_everytime
+from modules.everytime.scripts.autolike import StartAutoLike
+from modules.utiles.logging.logging_utils import GetLogger
+from modules.utiles.chromedriver.chrome_manager import ChromeDriverManager
+from modules.utiles.files.env_utils import load_env
+from selenium.common.exceptions import NoSuchElementException
             
-def everytime_main(args):
+def run_everytime_auto_like(headless):
     logger = GetLogger("everytime_autoLike.log")
 
     # .env 파일 및 config.yaml 파일 불러오기
@@ -28,7 +28,7 @@ def everytime_main(args):
     
     try:
         manager = ChromeDriverManager()
-        manager.start(headless=args.headless, url="https://everytime.kr/")
+        manager.start(headless=headless, url="https://everytime.kr/")
         
         import time
         time.sleep(5)

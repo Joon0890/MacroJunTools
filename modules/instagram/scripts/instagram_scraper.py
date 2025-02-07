@@ -1,11 +1,10 @@
 from modules.instagram import save_img_video
 from modules.instagram import collect_contents_new
-from modules.instagram import login_insta
 from modules.utiles import ChromeDriverManager
 from modules.utiles import remove_duplicate_files
 from modules.utiles import load_env
 
-def insta_main(args):
+def run_instagram_scraper(headless, save_path):
     # .env 파일 및 config.yaml 파일 불러오기
     env_values = load_env()
 
@@ -22,13 +21,17 @@ def insta_main(args):
 
     try:
         manager = ChromeDriverManager()
-        manager.start(headless=args.headless, url=URL_INPUT)
+        manager.start(headless=headless, url=URL_INPUT)
 
         username, article_id, image_list, video_list = collect_contents_new(manager.browser)
 
-        save_img_video(username, article_id, image_list, video_list, output_path=args.save_path)
+        save_img_video(username, article_id, image_list, video_list, output_path=save_path)
 
-        remove_duplicate_files(folder_path=args.save_path)
+        remove_duplicate_files(folder_path=save_path)
 
     except Exception as e:
         print(f"Error occurred in Instagram scraper: {e}")
+
+    finally:
+        if manager:
+            manager.stop()

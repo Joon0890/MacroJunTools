@@ -1,7 +1,7 @@
 import pyautogui
 import time
-from modules.pyautogui.utiles.autoclick_utils import AutoClick
-from modules.pyautogui.utiles.autoclick_utils import is_pressed
+from modules.pyautogui.scripts.autoclick_utils import AutoClick
+from modules.pyautogui.scripts.autoclick_utils import is_pressed
 
 def find_all_locations(image_path, confidence=0.95):
     return list(pyautogui.locateAllOnScreen(image_path, confidence=confidence))

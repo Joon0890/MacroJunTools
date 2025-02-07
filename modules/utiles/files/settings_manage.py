@@ -3,7 +3,7 @@ from modules.utiles.files.config_utils import load_config, save_config
 from modules.utiles.files.env_utils import load_env
 from modules.utiles.files.config_utils import load_config
 
-def interactive_config():
+def interactive_env():
     # 공통 설정
     services = {
         "1": "instagram",
@@ -33,6 +33,23 @@ def interactive_config():
 
     save_env(username_key, username)
     save_env(password_key, password)
+
+def interactive_config():
+    # 공통 설정
+    services = {
+        "1": "instagram",
+        "2": "sugang",
+        "3": "everytime"
+    }
+
+    print("\n=== Service Selection ===")
+    for number, service in services.items():
+        print(f"{number}. {service.capitalize()}")
+
+    selected_service = input("\nSelect a service to configure (1-3): ").strip()
+    if selected_service not in services:
+        print("[ERROR] Invalid selection. Please choose a valid option.")
+        return
 
     # YAML 파일 처리 (기본 옵션)
     config = load_config()
