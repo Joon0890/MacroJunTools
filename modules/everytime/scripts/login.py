@@ -28,21 +28,21 @@ def login_everytime(
     logger.info("Attempting to log in with ID: %s", my_id)
 
     try:
-        if manager.browser.find_element(By.ID, "submenu"):
+        if manager.browser.find_element(By.CSS_SELECTOR, "div#submenu"):
             logger.info("Already logged in, skipping login process.")
             return False
     except NoSuchElementException:
-        logger.info("Not logged in, proceeding with login.")
+        logger.warning("Not logged in, proceeding with login.")
 
     try:
-        signin_button = manager.browser.find_element(By.CLASS_NAME, "signin")
+        signin_button = manager.browser.find_element(By.CSS_SELECTOR, "a.signin")
         logger.info("Sign-in button found, clicking...")
         signin_button.click()
     except NoSuchElementException:
         logger.warning("Sign-in button not found, skipping...")
 
     logger.info("Locating login form...")
-    login_form = manager.browser.find_element(By.TAG_NAME, "form")
+    login_form = manager.browser.find_element(By.CSS_SELECTOR, "form[method='post']")
 
     id_elem = login_form.find_element(By.NAME, "id")
     password_elem = login_form.find_element(By.NAME, "password")

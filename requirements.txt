@@ -4,6 +4,7 @@ instaloader
 requests
 python-dotenv
 pyautogui
+pytesseract
 keyboard
 pillow
 opencv-python

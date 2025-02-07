@@ -1,11 +1,9 @@
-from modules.utiles import ChromeDriverManager
-from modules.utiles import remove_duplicate_files
-from modules.utiles import load_config, load_env
 from modules.instagram import save_img_video
 from modules.instagram import collect_contents_new
 from modules.instagram import login_insta
 from modules.utiles import ChromeDriverManager
 from modules.utiles import remove_duplicate_files
+from modules.utiles import load_env
 
 def insta_main(args):
     # .env 파일 및 config.yaml 파일 불러오기

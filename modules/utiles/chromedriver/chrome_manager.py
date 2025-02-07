@@ -19,9 +19,9 @@ CHROME_PATHS = [
 
 DEFAULT_OPTIONS = [
     "--disable-gpu",
-    "--window-size=1920,1080",
     "--disable-dev-shm-usage",
     "--no-first-run",
+    "--log-level=3"
 ]               
 
 def find_available_port():
@@ -75,6 +75,7 @@ class WebDriverManager:
         options = ChromeOptions()
         options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
         options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36")
 
         try:
             self.browser = Chrome(options=options)

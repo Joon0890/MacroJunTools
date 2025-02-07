@@ -30,6 +30,8 @@ def everytime_main(args):
         manager = ChromeDriverManager()
         manager.start(headless=args.headless, url="https://everytime.kr/")
         
+        import time
+        time.sleep(5)
         # 크롬이 종료되었을 경우 예외 처리
         if not manager.browser:
             logger.error("Chrome browser failed to start.")
