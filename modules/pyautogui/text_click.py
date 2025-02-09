@@ -1,7 +1,7 @@
 import pyautogui
 import pytesseract
-from modules.pyautogui.scripts.autoclick_utils import AutoClick
-from modules.pyautogui.scripts.autoclick_utils import refresh
+from modules.pyautogui.autoclick_utils import AutoClick
+from modules.pyautogui.autoclick_utils import refresh
 
 def take_screenshot():
     """화면을 캡처하여 반환합니다."""

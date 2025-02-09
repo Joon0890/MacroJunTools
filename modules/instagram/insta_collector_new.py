@@ -6,9 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 LI_NUMBERRING = "23333333333333333333"
 
-def get_XPATH_format(
-    li_num: Optional[int] = None
-) -> str:
+def get_XPATH_format(li_num: Optional[int] = None) -> str:
     if li_num:
         return [
             f"/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/section/main/div/div[1]/div/div[1]/div/div/div/div/div[1]/div/div[1]/div[2]/div/div/div/ul/li[{li_num}]/div/div/div/div/div[1]/img",
@@ -54,6 +52,5 @@ def collect_contents_new(driver: Chrome):
     print("[INFO] Finished scraping.")
     print(f"[SUMMARY] Collected {len(image_list)} image links and {len(video_list)} video links.")
     return username, article_id, image_list, video_list
-    
 
     

@@ -1,5 +1,5 @@
 import argparse
-from modules.utiles import interactive_env
+from modules.settings_manage import interactive_env
 from modules.everytime import run_everytime_auto_like
 from modules.instagram import run_instagram_scraper
 from modules.pyautogui import run_sugang_tool

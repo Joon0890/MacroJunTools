@@ -1,6 +1,6 @@
-from modules.pyautogui import AutoImageClick
-from modules.pyautogui import FindImgLocation
-from modules.utiles import save_json, load_json
+from modules.pyautogui.image_click import AutoImageClick
+from modules.pyautogui.find_location import FindImgLocation
+from modules.json_file import save_json, load_json
 
 def run_sugang_tool(auto_click, imgpath, confidence, wait_time):
     if imgpath:

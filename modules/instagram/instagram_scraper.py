@@ -1,8 +1,8 @@
-from modules.instagram import save_img_video
-from modules.instagram import collect_contents_new
-from modules.utiles import ChromeDriverManager
-from modules.utiles import remove_duplicate_files
-from modules.utiles import load_env
+from modules.instagram.save_contents import save_img_video
+from modules.instagram.insta_collector_new import collect_contents_new
+from modules.chrome_manager import ChromeDriverManager
+from modules.delete_file import remove_duplicate_files
+from modules.env_utils import load_env
 
 def run_instagram_scraper(headless, save_path):
     # .env 파일 및 config.yaml 파일 불러오기
