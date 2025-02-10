@@ -128,6 +128,18 @@ class ChromeDriverManager:
         self.webdriver_manager = WebDriverManager()
         self.is_running = False
 
+    def __enter__(self):
+        """ with 문에서 사용할 때 자동 실행 """
+        return self  # 객체 자체를 반환
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        """ with 문 종료 시 자동 실행 """
+        if exc_type is not None:
+            logger.error("Exception occurred in ChromeDriverManager: %s", exc_value)
+
+        self.stop()  # 안전한 종료 처리
+        return False  # 예외를 다시 발생시켜 상위 코드에서 처리할 수 있도록 함.
+
     @property
     def browser(self) -> "Chrome":
         if not self.webdriver_manager.browser:
@@ -163,18 +175,23 @@ class ChromeDriverManager:
         self.is_running = False
         logger.info("ChromeDriverManager stopped.")
 
-
 if __name__ == "__main__":
     try:
-        manager = ChromeDriverManager()
-        manager.start(headless=False, url="https://everytime.kr/")
-
-        input("Press Enter to stop...")  # 테스트용
+        with ChromeDriverManager() as manager:
+            manager.start(headless=False, url="https://everytime.kr/")
+            input("Press Enter to stop...")  # 테스트용
+            import time
+            time.sleep(7)
 
     except KeyboardInterrupt:
-        logger.info("User interrupted execution. Stopping ChromeDriverManager.")
+        print("User interrupted execution. Stopping ChromeDriverManager.")
     except Exception as e:
-        logger.error("Unexpected error: %s", e)
+        print("Unexpected error: %s", e)
     finally:
-        manager.stop()
-        sys.exit(0)  # 프로그램 정상 종료
+        if manager:
+            manager.stop()  # 혹시라도 정상적으로 종료되지 않았다면 안전하게 종료
+
+
+
+
+
