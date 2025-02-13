@@ -46,3 +46,4 @@ def exception_handler(logger):
 
         return wrapper
     return decorator
+

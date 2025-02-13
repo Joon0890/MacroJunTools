@@ -1,6 +1,6 @@
 import time, random
 from enum import Enum
-from typing import Optional
+from typing import Union
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement   
@@ -19,7 +19,7 @@ def initialize_articles(browser: Chrome):
 def navigate(
     browser: Chrome, 
     direction: str, 
-    wait_time: Optional[int] = None
+    wait_time: Union[int, float, None] = None
 ) -> None:
     """Navigates to the next or previous page."""
     if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
@@ -39,7 +39,7 @@ def scroll_into_view(
     browser: Chrome, 
     element: WebElement,
     scroll_script: str = ScrollBehavior.AUTO.value,  
-    wait_time: Optional[int] = None
+    wait_time: Union[int, float, None] = None
 ) -> None:
     """Scrolls the browser to bring the element into view."""
     if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
