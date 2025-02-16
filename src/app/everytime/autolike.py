@@ -14,7 +14,7 @@ from src.app.everytime.exception import exception_handler
 from src.utils.custom_logging import GetLogger
 from src.utils.chrome_manager import ChromeDriverManager
 
-logger = GetLogger("src/logs/auto_like.log")
+logger = GetLogger()
 
 def __create_art_list(articles: List[WebElement], comparison_str: str) -> List[str]:
     """Generates a list of article titles, stopping at the comparison string."""

@@ -9,7 +9,7 @@ from src.utils.file.env_utils import load_env
 from selenium.common.exceptions import NoSuchElementException
             
 def run_everytime_auto_like(headless):
-    logger = GetLogger("everytime_autoLike.log")
+    logger = GetLogger("src/logs/auto_like.log")
 
     # .env 파일 및 config.yaml 파일 불러오기
     env_values = load_env()
@@ -38,7 +38,7 @@ def run_everytime_auto_like(headless):
         login_everytime(manager, my_id, my_password)
 
         move_to_board(manager, "자유게시판")
-        start_article, page_num = find_starting_point(manager, "everytime_autoLike.log")
+        start_article, page_num = find_starting_point(manager, "src/logs/auto_like.log")
 
         logger.info("Starting from article: %s, page number: %s", start_article, page_num)
 

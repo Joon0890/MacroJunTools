@@ -8,7 +8,7 @@ from src.utils.custom_logging import GetLogger
 from src.app.everytime.exception import exception_handler
 from src.utils.chrome_manager import ChromeDriverManager
 
-logger = GetLogger("src/logs/auto_like.log")
+logger = GetLogger()
 
 @exception_handler(logger)
 def login_everytime(

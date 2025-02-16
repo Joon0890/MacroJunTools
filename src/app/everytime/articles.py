@@ -12,7 +12,7 @@ from src.utils.custom_logging import read_logs
 from src.utils.custom_logging import GetLogger
 from src.utils.chrome_manager import ChromeDriverManager
 
-logger = GetLogger("src/logs/auto_like.log")
+logger = GetLogger()
 
 @exception_handler(logger)
 def move_to_board(manager: ChromeDriverManager, board_name: str, wait_time: Optional[int] = None) -> None:

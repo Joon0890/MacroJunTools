@@ -6,7 +6,7 @@ from selenium_stealth import stealth
 from selenium.webdriver import Chrome, ChromeOptions
 from src.utils.custom_logging import GetLogger
 
-logger = GetLogger("chrome.log")
+logger = GetLogger()
 
 # Chrome 실행 경로 목록
 CHROME_PATHS = [
