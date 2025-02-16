@@ -7,14 +7,14 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from modules.everytime.everytime_utils import navigate
-from modules.everytime.everytime_utils import scroll_into_view
-from modules.everytime.everytime_utils import initialize_articles
-from modules.everytime.exception import exception_handler
-from modules.log import GetLogger
-from modules.chrome_manager import ChromeDriverManager
+from src.app.everytime.everytime_utils import navigate
+from src.app.everytime.everytime_utils import scroll_into_view
+from src.app.everytime.everytime_utils import initialize_articles
+from src.app.everytime.exception import exception_handler
+from src.utils.custom_logging import GetLogger
+from src.utils.chrome_manager import ChromeDriverManager
 
-logger = GetLogger()
+logger = GetLogger("src/logs/auto_like.log")
 
 def __create_art_list(articles: List[WebElement], comparison_str: str) -> List[str]:
     """Generates a list of article titles, stopping at the comparison string."""

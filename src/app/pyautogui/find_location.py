@@ -1,6 +1,6 @@
 import time
 import pyautogui
-from modules.pyautogui.image_click import find_all_locations
+from src.app.pyautogui.image_click import find_all_locations
 
 def display_search_results(locations):
     """

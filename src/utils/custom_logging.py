@@ -79,7 +79,7 @@ class CustomLogging(logging.Logger):
 class GetLogger:
     _instance = None  # 하나의 전역 로거 유지
 
-    def __new__(cls, logger_name="everytime_autoLike.log", logger_option="GlobalLogger"):
+    def __new__(cls, logger_name="app.log", logger_option="GlobalLogger"):
         if cls._instance is None:
             logger = CustomLogging(logger_option)  # 하나의 글로벌 로거 생성
 

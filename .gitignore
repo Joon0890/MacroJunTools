@@ -1,12 +1,6 @@
-*.jpg
-*.json
 /**/__pycache__
-*.pdf
-*.pptx
-config/
-data/
+config/.env
 *.csv
 *.log
-.idea/
 
 

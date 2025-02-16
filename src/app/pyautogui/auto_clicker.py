@@ -1,6 +1,6 @@
 import time
 import pyautogui
-from modules.pyautogui.autoclick_utils import is_pressed
+from src.app.pyautogui.autoclick_utils import is_pressed
 
 def CanvasAutoSave(page, save_folder="canva_file", index=0):
     print("[INFO] Starting program...")

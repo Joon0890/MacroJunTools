@@ -1,10 +1,10 @@
 import sys
 from functools import wraps
 from selenium.common.exceptions import NoSuchElementException, WebDriverException, NoSuchWindowException
-from modules.everytime.transform import selenium_error_transform
-from modules.log import GetLogger
+from src.app.everytime.transform import selenium_error_transform
+from src.utils.custom_logging import GetLogger
 
-logger = GetLogger()
+logger = GetLogger("src/logs/auto_like.log")
 
 def exception_handler(logger):
     """

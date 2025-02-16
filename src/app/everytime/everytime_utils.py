@@ -4,9 +4,9 @@ from typing import Union
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement   
-from modules.log import GetLogger
+from src.utils.custom_logging import GetLogger
 
-logger = GetLogger()
+logger = GetLogger("src/logs/auto_like.log")
 
 class ScrollBehavior(Enum):
     AUTO = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"

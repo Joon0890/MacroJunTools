@@ -1,8 +1,11 @@
 import argparse
-from modules.settings_manage import interactive_env
-from modules.everytime import run_everytime_auto_like
-from modules.instagram import run_instagram_scraper
-from modules.pyautogui import run_sugang_tool
+from config import interactive_env
+from src import (
+    run_everytime_auto_like, 
+    run_instagram_scraper, 
+    run_sugang_tool, 
+    #run_yes24_save_tool
+)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main Entry Point")
@@ -27,6 +30,8 @@ if __name__ == "__main__":
     everytime_parser = subparsers.add_parser("everytime", help="Run Everytime auto-like")
     everytime_parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
+    #yes24_parser = subparsers.add_parser("yes24", help="Run YES24 ebook auto save")
+
     # 실행
     args = parser.parse_args()
 
@@ -38,5 +43,8 @@ if __name__ == "__main__":
         run_everytime_auto_like(headless=args.headless)
     elif args.command == "sugang":
         run_sugang_tool(auto_click=args.auto_click, imgpath=args.imgpath, confidence=args.confidence, wait_time=args.wait_time)
+    elif args.command == "yes24":
+        pass
+        #run_yes24_save_tool()
     else:
         parser.print_help()

@@ -4,9 +4,9 @@ from subprocess import Popen
 import chromedriver_autoinstaller
 from selenium_stealth import stealth
 from selenium.webdriver import Chrome, ChromeOptions
-from modules.log import GetLogger
+from src.utils.custom_logging import GetLogger
 
-logger = GetLogger()
+logger = GetLogger("chrome.log")
 
 # Chrome 실행 경로 목록
 CHROME_PATHS = [

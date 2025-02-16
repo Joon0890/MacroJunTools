@@ -4,15 +4,15 @@ import random
 from typing import Optional, List
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from modules.everytime.everytime_utils import navigate
-from modules.everytime.everytime_utils import scroll_into_view
-from modules.everytime.everytime_utils import initialize_articles
-from modules.everytime.exception import exception_handler
-from modules.log import read_logs
-from modules.log import GetLogger
-from modules.chrome_manager import ChromeDriverManager
+from src.app.everytime.everytime_utils import navigate
+from src.app.everytime.everytime_utils import scroll_into_view
+from src.app.everytime.everytime_utils import initialize_articles
+from src.app.everytime.exception import exception_handler
+from src.utils.custom_logging import read_logs
+from src.utils.custom_logging import GetLogger
+from src.utils.chrome_manager import ChromeDriverManager
 
-logger = GetLogger()
+logger = GetLogger("src/logs/auto_like.log")
 
 @exception_handler(logger)
 def move_to_board(manager: ChromeDriverManager, board_name: str, wait_time: Optional[int] = None) -> None:

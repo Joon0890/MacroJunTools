@@ -4,11 +4,11 @@ import random
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from modules.log import GetLogger
-from modules.everytime.exception import exception_handler
-from modules.chrome_manager import ChromeDriverManager
+from src.utils.custom_logging import GetLogger
+from src.app.everytime.exception import exception_handler
+from src.utils.chrome_manager import ChromeDriverManager
 
-logger = GetLogger()
+logger = GetLogger("src/logs/auto_like.log")
 
 @exception_handler(logger)
 def login_everytime(

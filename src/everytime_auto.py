@@ -1,11 +1,11 @@
 import sys
-from modules.everytime.articles import move_to_board
-from modules.everytime.articles import find_starting_point
-from modules.everytime.login import login_everytime
-from modules.everytime.autolike import StartAutoLike
-from modules.log import GetLogger
-from modules.chrome_manager import ChromeDriverManager
-from modules.env_utils import load_env
+from src.app.everytime.articles import move_to_board
+from src.app.everytime.articles import find_starting_point
+from src.app.everytime.login import login_everytime
+from src.app.everytime.autolike import StartAutoLike
+from src.utils.chrome_manager import ChromeDriverManager
+from src.utils.custom_logging import GetLogger
+from src.utils.file.env_utils import load_env
 from selenium.common.exceptions import NoSuchElementException
             
 def run_everytime_auto_like(headless):
@@ -21,7 +21,7 @@ def run_everytime_auto_like(headless):
     logger.info("Everytime ID, Password: %s, %s", my_id, my_password)
     
     if not my_id or not my_password:
-        logger.error("Instagram credentials are missing in .env file!")
+        logger.error("Everytime ID, Password are missing in .env file!")
         raise
     
     logger.info("Starting Everytime auto-like...")
