@@ -4,7 +4,7 @@ from selenium.common.exceptions import NoSuchElementException, WebDriverExceptio
 from src.app.everytime.transform import selenium_error_transform
 from src.utils.custom_logging import GetLogger
 
-logger = GetLogger()
+logger = GetLogger("logger_everytime")
 
 def exception_handler(logger):
     """

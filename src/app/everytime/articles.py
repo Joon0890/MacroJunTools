@@ -12,7 +12,7 @@ from src.utils.custom_logging import read_logs
 from src.utils.custom_logging import GetLogger
 from src.utils.chrome_manager import ChromeDriverManager
 
-logger = GetLogger()
+logger = GetLogger("logger_everytime")
 
 @exception_handler(logger)
 def move_to_board(manager: ChromeDriverManager, board_name: str, wait_time: Optional[int] = None) -> None:
@@ -81,11 +81,10 @@ def __find_article_for_click(
     
     """Finds the article to start liking from."""
 
-    logger.info("Searching for starting article: %s", ', '.join(start_article))
-
     if start_article:
         found = False
         page_num = 1
+        logger.info("Searching for starting article: %s", ', '.join(start_article))
 
         while not found:
             articles = initialize_articles(browser)

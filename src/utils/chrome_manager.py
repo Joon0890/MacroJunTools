@@ -6,7 +6,11 @@ from selenium_stealth import stealth
 from selenium.webdriver import Chrome, ChromeOptions
 from src.utils.custom_logging import GetLogger
 
-logger = GetLogger()
+logger = GetLogger(
+    "logger_chrome", 
+    "src/logs/chrome.log", 
+    "%(asctime)s - %(levelname)s - %(message)s"
+)
 
 # Chrome 실행 경로 목록
 CHROME_PATHS = [
@@ -18,7 +22,8 @@ DEFAULT_OPTIONS = [
     "--disable-gpu",
     "--disable-dev-shm-usage",
     "--no-first-run",
-    "--log-level=3"
+    "--log-level=3",
+    "--user-data-dir=C:\\chrometemp"
 ]
 
 DEFAULT_OPTIONS_STR = "--disable-gpu --disable-dev-shm-usage --no-first-run --log-level=3"

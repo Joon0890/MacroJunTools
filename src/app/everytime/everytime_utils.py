@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement   
 from src.utils.custom_logging import GetLogger
 
-logger = GetLogger()
+logger = GetLogger("logger_everytime")
 
 class ScrollBehavior(Enum):
     AUTO = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"

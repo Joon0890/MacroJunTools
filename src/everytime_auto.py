@@ -1,15 +1,19 @@
 import sys
+
+from src.utils.custom_logging import GetLogger
+logging_file_path = "src/logs/auto_like.log"
+logger = GetLogger("logger_everytime", logging_file_path)
+
 from src.app.everytime.articles import move_to_board
 from src.app.everytime.articles import find_starting_point
 from src.app.everytime.login import login_everytime
 from src.app.everytime.autolike import StartAutoLike
 from src.utils.chrome_manager import ChromeDriverManager
-from src.utils.custom_logging import GetLogger
 from src.utils.file.env_utils import load_env
 from selenium.common.exceptions import NoSuchElementException
             
 def run_everytime_auto_like(headless):
-    logger = GetLogger("src/logs/auto_like.log")
+    global logger
 
     # .env 파일 및 config.yaml 파일 불러오기
     env_values = load_env()
@@ -38,7 +42,7 @@ def run_everytime_auto_like(headless):
         login_everytime(manager, my_id, my_password)
 
         move_to_board(manager, "자유게시판")
-        start_article, page_num = find_starting_point(manager, "src/logs/auto_like.log")
+        start_article, page_num = find_starting_point(manager, logging_file_path)
 
         logger.info("Starting from article: %s, page number: %s", start_article, page_num)
 
@@ -51,8 +55,9 @@ def run_everytime_auto_like(headless):
         sys.exit(0)  # 정상 종료
     
     finally:
-        logger.info("The task is complete.")
         if manager:
             manager.stop()
+        logger.info("The task is complete.")
+        sys.exit(0)  # 정상 종료
 
 
