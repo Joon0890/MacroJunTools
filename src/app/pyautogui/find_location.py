@@ -1,6 +1,7 @@
 import time
 import pyautogui
 from src.app.pyautogui.image_click import find_all_locations
+from src.app.pyautogui.autoclick_utils import is_pressed
 
 def display_search_results(locations):
     """
@@ -60,14 +61,16 @@ def FindImgLocation(image_paths, confidence=0.95):
             choice_list.append(result)
     return choice_list
 
-
 def findPosition():
-    print("Ctrl + C를 눌러 종료합니다.")
+    print("Press ESC to exit.")
     try:
         while True:
-            # 현재 마우스 위치 가져오기
+            # Get the current mouse position
             current_position = pyautogui.position()
-            print(f"현재 마우스 위치: x={current_position.x}, y={current_position.y}", end="\r")
-            time.sleep(0.1)  # 0.1초마다 갱신
+            print(f"Current mouse position: x={current_position.x}, y={current_position.y}", end="\r")
+            time.sleep(0.1)  # Update every 0.1 seconds
+            if is_pressed():
+                return current_position.x, current_position.y
     except KeyboardInterrupt:
-        print("\n프로그램을 종료합니다.")
+        print("\nForcing program termination.")
+

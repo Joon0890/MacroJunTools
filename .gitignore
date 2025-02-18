@@ -2,5 +2,5 @@
 config/.env
 *.csv
 *.log
-
-
+*.yaml
+*.json

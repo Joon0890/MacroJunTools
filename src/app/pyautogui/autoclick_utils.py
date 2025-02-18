@@ -38,6 +38,6 @@ def AutoClick(location=None, x=None, y=None, interval=0.1, refresh_flag=False):
 
 def is_pressed(key="esc"):
     if keyboard.is_pressed(key):  # ESC 키 감지
-        print("[INFO] Esc key pressed. Exiting.")
+        print("\n[INFO] Esc key pressed. Exiting.")
         return True # 함수 종료
     return False
