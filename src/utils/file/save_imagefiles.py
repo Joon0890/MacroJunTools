@@ -4,13 +4,18 @@ from pptx import Presentation
 from pptx.util import Inches, Pt  
 
 def load_image_files(image_folder):
-    # 폴더 내 모든 이미지 파일 읽기
+    """ 폴더 내 모든 이미지 파일을 screenshot_XXX 순서대로 정렬하여 반환 """
     image_files = [
         os.path.join(image_folder, file)
         for file in os.listdir(image_folder)
         if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))
     ]
+
+    # 숫자 기준 정렬 (screenshot_XXX.png → XXX 기준)
+    image_files.sort(key=lambda x: int(os.path.basename(x).split('_')[1].split('.')[0]))
+
     return image_files
+
 
 def PPTsave(image_folder, output_file="output.pptx"):
     # PowerPoint 생성
