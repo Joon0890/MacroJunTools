@@ -4,19 +4,16 @@ from typing import Union
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement   
-from src.utils.custom_logging import GetLogger
-
-logger = GetLogger("logger_everytime")
 
 class ScrollBehavior(Enum):
     AUTO = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
     SMOOTH = "arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });"
     END = "arguments[0].scrollIntoView({ behavior: 'smooth', block: 'end' });"
 
-def initialize_articles(browser: Chrome):
+def _initialize_articles(browser: Chrome):
     return browser.find_elements(By.XPATH, "//article[@class='list']")
 
-def navigate(
+def _navigate(
     browser: Chrome, 
     direction: str, 
     wait_time: Union[int, float, None] = None
@@ -26,16 +23,15 @@ def navigate(
         wait_time = random.uniform(1, 2)
 
     if direction not in {"prev", "next"}:
-        logger.error("Invalid direction '%s'. Expected 'prev' or 'next'.", direction)
         raise ValueError(f"Invalid direction '{direction}'. Expected 'prev' or 'next'.")
 
     pagination = browser.find_element(By.CLASS_NAME, "pagination")
     button = pagination.find_element(By.CLASS_NAME, direction)
-    scroll_into_view(browser, button)
+    _scroll_into_view(browser, button)
     button.click()
     time.sleep(wait_time)
     
-def scroll_into_view(
+def _scroll_into_view(
     browser: Chrome, 
     element: WebElement,
     scroll_script: str = ScrollBehavior.AUTO.value,  

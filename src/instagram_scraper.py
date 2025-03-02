@@ -1,6 +1,6 @@
 from src.app.instagram.save_contents import save_img_video
 from src.app.instagram.insta_collector_new import collect_contents_new
-from src.utils.chrome_manager import ChromeDriverManager
+from src.utils.chrome_manager import ChromeDriverService
 from src.utils.file.delete_file import remove_duplicate_files
 from src.utils.file.env_utils import load_env
 
@@ -20,7 +20,7 @@ def run_instagram_scraper(headless, save_path):
     URL_INPUT = input("[INFO] INPUT INSTAGRAM URL: ")
 
     try:
-        manager = ChromeDriverManager()
+        manager = ChromeDriverService()
         manager.start(headless=headless, url=URL_INPUT)
 
         username, article_id, image_list, video_list = collect_contents_new(manager.browser)

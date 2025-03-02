@@ -1,7 +1,7 @@
 import argparse
 from config import interactive_env
 from src import (
-    run_everytime_auto_like, 
+    RunEverytimeAutoLike, 
     run_instagram_scraper, 
     run_sugang_tool, 
     run_yes24_save_tool
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     elif args.command == "instagram":
         run_instagram_scraper(headless=args.headless, save_path=args.save_path)
     elif args.command == "everytime":
-        run_everytime_auto_like(headless=args.headless)
+        RunEverytimeAutoLike(headless=args.headless)
     elif args.command == "sugang":
         run_sugang_tool(auto_click=args.auto_click, imgpath=args.imgpath, confidence=args.confidence, wait_time=args.wait_time)
     elif args.command == "yes24":

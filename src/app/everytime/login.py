@@ -1,18 +1,17 @@
-from typing import Optional
 import time
 import random
+from typing import Optional
+from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from src.utils.custom_logging import GetLogger
 from src.app.everytime.exception import exception_handler
-from src.utils.chrome_manager import ChromeDriverManager
+from src.utils.custom_logging import CustomLogging
 
-logger = GetLogger("logger_everytime")
-
-@exception_handler(logger)
+@exception_handler
 def login_everytime(
-    manager: ChromeDriverManager, 
+    browser: Chrome, 
+    logger: CustomLogging,
     my_id: Optional[str], 
     my_password: Optional[str],
     wait_time: Optional[int] = None
@@ -28,21 +27,21 @@ def login_everytime(
     logger.info("Attempting to log in with ID: %s", my_id)
 
     try:
-        if manager.browser.find_element(By.CSS_SELECTOR, "div#submenu"):
+        if browser.find_element(By.CSS_SELECTOR, "div#submenu"):
             logger.info("Already logged in, skipping login process.")
             return False
     except NoSuchElementException:
         logger.warning("Not logged in, proceeding with login.")
 
     try:
-        signin_button = manager.browser.find_element(By.CSS_SELECTOR, "a.signin")
+        signin_button = browser.find_element(By.CSS_SELECTOR, "a.signin")
         logger.info("Sign-in button found, clicking...")
         signin_button.click()
     except NoSuchElementException:
         logger.warning("Sign-in button not found, skipping...")
 
     logger.info("Locating login form...")
-    login_form = manager.browser.find_element(By.CSS_SELECTOR, "form[method='post']")
+    login_form = browser.find_element(By.CSS_SELECTOR, "form[method='post']")
 
     id_elem = login_form.find_element(By.NAME, "id")
     password_elem = login_form.find_element(By.NAME, "password")

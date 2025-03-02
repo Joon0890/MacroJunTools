@@ -1,49 +1,55 @@
 import sys
 from functools import wraps
-from selenium.common.exceptions import NoSuchElementException, WebDriverException, NoSuchWindowException
-from src.app.everytime.transform import selenium_error_transform
-from src.utils.custom_logging import GetLogger
+from selenium.common.exceptions import (NoSuchElementException, 
+                                        WebDriverException, 
+                                        NoSuchWindowException)
+from src.app.everytime.transform import _selenium_error_transform
 
-logger = GetLogger("logger_everytime")
+def exception_handler(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        manager = _get_manager_from_args(*args)
 
-def exception_handler(logger):
+        try:
+            return func(self, *args, **kwargs)
+        
+        except KeyboardInterrupt:
+            if manager:
+                manager.stop()
+            sys.exit("Execution stopped by user (Ctrl+C).")
+        
+        except NoSuchElementException as e:
+            # The login method should continue even if an element is not found
+            raise _selenium_error_transform(e)
+        
+        except (WebDriverException, NoSuchWindowException) as e:
+            if manager:
+                manager.stop()
+            sys.exit("Terminating due to ChromeDriver connection failure.")
+
+        except Exception as e:
+            if manager:
+                manager.stop()
+            sys.exit("Terminating due to an unknown error.")
+
+    return wrapper
+
+def _get_manager_from_args(*args):
     """
-    - `KeyboardInterrupt`: 프로그램 종료
-    - `WebDriverException`, `NoSuchWindowException`: 크롬 드라이버 문제로 종료
-    - 일반 `Exception`: 예상치 못한 오류로 종료
+    클래스 인스턴스 메서드면 self에서 manager를 찾고,
+    일반 함수면 첫 번째 인자를 manager로 간주.
     """
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            
-            except KeyboardInterrupt:
-                logger.info("Program interrupted by the user. Exiting gracefully.")
-                manager = args[0] if hasattr(args[0], "stop") else None
-                if manager:
-                    manager.stop()
-                sys.exit("Execution stopped by user (Ctrl+C).")
-            
-            except NoSuchElementException as e:
-                # The login method should continue even if an element is not found
-                logger.warning(f"Element not found, proceeding to the next step: {selenium_error_transform(e)}")
-                raise e
-            
-            except (WebDriverException, NoSuchWindowException) as e:
-                logger.error(f"ChromeDriver connection lost: {selenium_error_transform(e)}")
-                manager = args[0] if hasattr(args[0], "stop") else None
-                if manager:
-                    manager.stop()
-                sys.exit("Terminating due to ChromeDriver connection failure.")
+    if len(args) == 0:
+        return None
 
-            except Exception as e:
-                logger.error(f"An unexpected error occurred: {e}")
-                manager = args[0] if hasattr(args[0], "stop") else None
-                if manager:
-                    manager.stop()
-                sys.exit("Terminating due to an unknown error.")
+    first_arg = args[0]
 
-        return wrapper
-    return decorator
+    # 클래스 인스턴스 메서드인 경우 (self)
+    if hasattr(first_arg, 'browser'):
+        return getattr(first_arg, 'browser', None)
 
+    # 일반 함수일 경우 첫 인자를 manager로 간주
+    if hasattr(first_arg, 'stop'):
+        return first_arg
+
+    return None

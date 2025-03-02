@@ -1,4 +1,4 @@
-def selenium_error_transform(error):
+def _selenium_error_transform(error):
     # Convert the exception to a string
     error_message = str(error)
     
