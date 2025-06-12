@@ -1,7 +1,7 @@
 import time
 import pyautogui
-from src.app.pyautogui.image_click import find_all_locations
-from src.app.pyautogui.autoclick_utils import is_pressed
+from MacroJunTools.macro.pyautogui.image_click import find_all_locations
+from MacroJunTools.macro.pyautogui.autoclick_utils import is_pressed
 
 def display_search_results(locations):
     """

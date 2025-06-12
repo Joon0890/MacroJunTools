@@ -1,5 +1,5 @@
 import pyautogui
-from src.app.pyautogui.autoclick_utils import AutoClick
+from MacroJunTools.macro.pyautogui.autoclick_utils import AutoClick
 
 def separate_color(color: str):
     color_map = {

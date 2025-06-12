@@ -7,11 +7,11 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from src.app.everytime.exception import exception_handler
-from src.app.everytime.everytime_utils import _navigate
-from src.app.everytime.everytime_utils import _scroll_into_view
-from src.app.everytime.everytime_utils import _initialize_articles
-from src.utils.custom_logging import CustomLogging
+from MacroJunTools.macro.everytime.exception import exception_handler
+from MacroJunTools.macro.everytime.everytime_utils import _navigate
+from MacroJunTools.macro.everytime.everytime_utils import _scroll_into_view
+from MacroJunTools.macro.everytime.everytime_utils import _initialize_articles
+from MacroJunTools.utils.custom_logging import CustomLogging
 
 class EverytimeAutoLiker:
     def __init__(self, browser: Chrome, logger: CustomLogging, start_article: str, page_num: int):

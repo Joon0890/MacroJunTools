@@ -1,10 +1,10 @@
-from src.utils.custom_logging import GetLogger
-from src.utils.file.env_utils import load_env
 from selenium.common.exceptions import NoSuchElementException
-from src.app.everytime.articles import move_to_board, find_starting_point 
-from src.app.everytime.autolike import EverytimeAutoLiker
-from src.app.everytime.login import login_everytime
-from src.utils.chrome_manager import ChromeDriverService
+from MacroJunTools.macro.everytime.articles import move_to_board, find_starting_point 
+from MacroJunTools.macro.everytime.autolike import EverytimeAutoLiker
+from MacroJunTools.macro.everytime.login import login_everytime
+from MacroJunTools.utils.custom_logging import GetLogger
+from MacroJunTools.utils.file.env_utils import load_env
+from MacroJunTools.utils.chrome_manager import ChromeDriverService
 
 class RunEverytimeAutoLike(ChromeDriverService):
     def __init__(self, headless, logging_file_path="app.log"):

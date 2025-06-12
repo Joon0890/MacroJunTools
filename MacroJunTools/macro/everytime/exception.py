@@ -3,7 +3,7 @@ from functools import wraps
 from selenium.common.exceptions import (NoSuchElementException, 
                                         WebDriverException, 
                                         NoSuchWindowException)
-from src.app.everytime.transform import _selenium_error_transform
+from MacroJunTools.macro.everytime.transform import _selenium_error_transform
 
 def exception_handler(func):
     @wraps(func)

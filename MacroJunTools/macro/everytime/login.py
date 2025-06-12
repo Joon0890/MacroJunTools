@@ -5,8 +5,8 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from src.app.everytime.exception import exception_handler
-from src.utils.custom_logging import CustomLogging
+from MacroJunTools.macro.everytime.exception import exception_handler
+from MacroJunTools.utils.custom_logging import CustomLogging
 
 @exception_handler
 def login_everytime(
