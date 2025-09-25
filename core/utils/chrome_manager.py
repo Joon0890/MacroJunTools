@@ -24,13 +24,21 @@ def get_user_agent():
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
     return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 
-class ChromeProcessManager:
-    # Chrome 실행 경로 목록
-    CHROME_PATHS = [
-        r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-        r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-    ]
+def _get_chrome_paths(self) -> list[str]:
+    system = platform.system()
+    if system == "Windows":
+        return [
+            r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        ]
+    elif system == "Linux":
+        # GitHub Actions (Ubuntu)의 기본 Chrome 경로 추가
+        return [r"/usr/bin/google-chrome"]
+    elif system == "Darwin": # MacOS
+        return [r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
+    return []
 
+class ChromeProcessManager:
     CHROME_OPTIONS = [
         "--disable-gpu",
         "--disable-dev-shm-usage",
@@ -59,7 +67,7 @@ class ChromeProcessManager:
         self.CHROME_OPTIONS = value
 
     def start_chrome(self, headless: bool, available_port: int):
-        chrome_path = find_chrome_path(self.CHROME_PATHS)
+        chrome_path = find_chrome_path(_get_chrome_paths())
         chrome_command = [chrome_path] + self.CHROME_OPTIONS
         chrome_command.append(f"--remote-debugging-port={available_port}")
         if headless:
