@@ -17,10 +17,10 @@ class RunEverytimeAutoLike(ChromeDriverService):
         self.start_running(headless)
         
     def get_id_password(self):
-        # .env 파일 및 config.yaml 파일 불러오기
+        # # .env 파일 및 config.yaml 파일 불러오기
         # env_values = load_env()
 
-        # .env에서 민감한 정보 가져오기
+        # # .env에서 민감한 정보 가져오기
         # my_id = env_values.get("EVERYTIME_USERNAME")
         # my_password = env_values.get("EVERYTIME_PASSWORD")
 

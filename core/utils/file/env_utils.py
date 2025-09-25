@@ -2,7 +2,7 @@ from dotenv import load_dotenv, set_key, dotenv_values
 import os
 
 # .env 파일 읽기
-def load_env(dotenv_path="config/.env"):
+def load_env(dotenv_path=".env"):
     load_dotenv(dotenv_path)
     return dotenv_values(dotenv_path)
 

@@ -89,12 +89,15 @@ class WebDriverController:
         options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument(f"--user-agent={get_user_agent()}")
+        options.add_argument("--window-size=1920,1080") # 윈도우 크기 강제 지정
+        options.add_argument("--disable-gpu") 
+        options.add_argument("--lang=ko_KR")
         self.browser = Chrome(options=options)
 
     def navigate_to(self, url, maximize, wait):  
         self.browser.get(url)
-        if maximize:
-            self.browser.maximize_window()
+        # if maximize:
+        #     self.browser.maximize_window()
         self.browser.implicitly_wait(wait)
        
     def quit_driver(self):

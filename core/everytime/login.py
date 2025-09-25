@@ -41,6 +41,8 @@ def login_everytime(
         logger.warning("Sign-in button not found, skipping...")
 
     logger.info("Locating login form...")
+    import time
+    time.sleep(3)
     login_form = browser.find_element(By.CSS_SELECTOR, "form[method='post']")
 
     id_elem = login_form.find_element(By.NAME, "id")
