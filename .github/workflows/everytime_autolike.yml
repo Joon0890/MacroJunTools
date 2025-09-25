@@ -40,3 +40,10 @@ jobs:
         env:
           EVERYTIME_ID: ${{ secrets.EVERYTIME_USERNAME }}
           EVERYTIME_PW: ${{ secrets.EVERYTIME_PASSWORD }}
+
+       # 6. 로그 파일 아티팩트로 업로드
+      - name: Upload log file
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs  # 생성될 아티팩트의 이름 (자유롭게 지정 가능)
+          path: ./logs/everytime_autolike.log  # 업로드할 로그 파일의 정확한 경로

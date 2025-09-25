@@ -9,9 +9,10 @@ from core.utils.chrome_manager import ChromeDriverService
 from core.everytime.transform import _selenium_error_transform
 
 class RunEverytimeAutoLike(ChromeDriverService):
-    def __init__(self, headless, logging_file_path="app.log"):
+    def __init__(self, headless, logging_file_path="everytime_autolike.log"):
         super().__init__()
         self.logging_file_path = logging_file_path
+        os.makedirs('./logs', exist_ok=True)
         self.logger = GetLogger("logger_everytime", logging_file_path)
         self.start_running(headless)
         
