@@ -1,4 +1,1 @@
 from core.everytime import RunEverytimeAutoLike
-from core.instagram.instagram_scraper import run_instagram_scraper
-from core.sugang.sugang_tool import run_sugang_tool
-from core.yes24.yes24_save_tool import run_yes24_save_tool
