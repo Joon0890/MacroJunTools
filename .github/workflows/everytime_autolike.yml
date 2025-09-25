@@ -1,0 +1,42 @@
+# .github/workflows/everytime_autolike.yml
+
+name: Everytime Auto-Like Automation
+
+# 언제 이 Action을 실행할지 정의하는 부분
+on:
+  workflow_dispatch: # GitHub Actions 탭에서 수동으로 실행할 수 있게 함
+  schedule:
+    - cron: '0 1 * * *' # 매일 UTC 1시에 실행 (한국 시간 오전 10시)
+
+# 어떤 작업을 수행할지 정의하는 부분
+jobs:
+  build:
+    runs-on: ubuntu-latest # 실행 환경 (우분투 최신 버전)
+
+    steps:
+      # 1. 내 Repository에 있는 코드를 Runner(가상 머신)로 가져옴
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Python 환경 설정
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' # 사용하시는 파이썬 버전 입력
+
+      # 3. 필요한 라이브러리 설치
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Chrome 및 ChromeDriver 설치 (중요!)
+      # ubuntu-latest 환경에는 Chrome이 이미 설치되어 있습니다.
+      # chromedriver-autoinstaller가 자동으로 버전에 맞는 드라이버를 설치해줍니다.
+      
+      # 5. 메인 파이썬 스크립트 실행
+      - name: Run Everytime Auto-Like
+        run: python main.py everytime --headless # 실행할 메인 파일 이름 입력
+        env:
+          EVERYTIME_ID: ${{ secrets.EVERYTIME_USERNAME }}
+          EVERYTIME_PW: ${{ secrets.EVERYTIME_PASSWORD }}
