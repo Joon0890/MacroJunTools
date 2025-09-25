@@ -40,8 +40,8 @@ jobs:
       - name: Run Everytime Auto-Like
         run: python main.py everytime --headless # 실행할 메인 파일 이름 입력
         env:
-          EVERYTIME_ID: ${{ secrets.EVERYTIME_USERNAME }}
-          EVERYTIME_PW: ${{ secrets.EVERYTIME_PASSWORD }}
+          EVERYTIME_USERNAME: ${{ secrets.EVERYTIME_USERNAME }}
+          EVERYTIME_PASSWORD: ${{ secrets.EVERYTIME_PASSWORD }}
 
        # 6. 로그 파일 아티팩트로 업로드
       - name: Upload log file
