@@ -1,13 +1,5 @@
 selenium
 chromedriver_autoinstaller
-instaloader
 requests
 python-dotenv
-pyautogui
-pytesseract
-keyboard
-pillow
-opencv-python
 selenium_stealth
-pyyaml
-python-pptx
