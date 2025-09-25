@@ -4,13 +4,13 @@ import random
 from typing import Optional, List
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from MacroJunTools.macro.everytime.everytime_utils import _navigate
-from MacroJunTools.macro.everytime.everytime_utils import _scroll_into_view
-from MacroJunTools.macro.everytime.everytime_utils import _initialize_articles
-from MacroJunTools.macro.everytime.exception import exception_handler
-from MacroJunTools.utils.custom_logging import read_logs
-from MacroJunTools.utils.custom_logging import CustomLogging
-from MacroJunTools.utils.chrome_manager import ChromeDriverService
+from core.everytime.everytime_utils import _navigate
+from core.everytime.everytime_utils import _scroll_into_view
+from core.everytime.everytime_utils import _initialize_articles
+from core.everytime.exception import exception_handler
+from core.utils.custom_logging import read_logs
+from core.utils.custom_logging import CustomLogging
+
 
 def _find_first_article(
     logger: CustomLogging,

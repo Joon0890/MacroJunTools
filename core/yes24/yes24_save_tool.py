@@ -1,6 +1,6 @@
-from MacroJunTools.macro.pyautogui.find_location import findPosition
-from MacroJunTools.macro.pyautogui.auto_clicker import YES24eBOOKAutoSave
-from MacroJunTools.utils.file.save_imagefiles import PDFsave
+from core.pyautogui.find_location import findPosition
+from core.pyautogui.auto_clicker import YES24eBOOKAutoSave
+from core.utils.file.save_imagefiles import PDFsave
 
 def run_yes24_save_tool():
     x1, y1 = findPosition()

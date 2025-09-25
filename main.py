@@ -1,6 +1,6 @@
 import argparse
 from config import interactive_env
-from MacroJunTools import (
+from core import (
     RunEverytimeAutoLike, 
     run_instagram_scraper, 
     run_sugang_tool, 

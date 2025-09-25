@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional
 from subprocess import Popen
 import chromedriver_autoinstaller
@@ -171,3 +170,7 @@ class ChromeDriverService(WebDriverController):
 
 
     
+if __name__=='__main__':
+    chromedriver = ChromeDriverService()
+
+    chromedriver.start("https://www.naver.com", False)

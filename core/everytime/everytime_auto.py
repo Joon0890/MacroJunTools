@@ -1,10 +1,11 @@
 from selenium.common.exceptions import NoSuchElementException
-from MacroJunTools.macro.everytime.articles import move_to_board, find_starting_point 
-from MacroJunTools.macro.everytime.autolike import EverytimeAutoLiker
-from MacroJunTools.macro.everytime.login import login_everytime
-from MacroJunTools.utils.custom_logging import GetLogger
-from MacroJunTools.utils.file.env_utils import load_env
-from MacroJunTools.utils.chrome_manager import ChromeDriverService
+from core.everytime.articles import move_to_board, find_starting_point
+from core.everytime.autolike import EverytimeAutoLiker
+from core.everytime.login import login_everytime
+from core.utils.custom_logging import GetLogger
+from core.utils.file.env_utils import load_env
+from core.utils.chrome_manager import ChromeDriverService
+from core.everytime.transform import _selenium_error_transform
 
 class RunEverytimeAutoLike(ChromeDriverService):
     def __init__(self, headless, logging_file_path="app.log"):
@@ -52,6 +53,10 @@ class RunEverytimeAutoLike(ChromeDriverService):
         except NoSuchElementException:
             self.logger.error("Exiting program as there are no more elements to process.")
             raise 
+
+        except Exception as e:
+            self.logger.error(f"An unknown error occurred: {str(e).strip()}")
+            raise
 
         finally:
             self.stop()
