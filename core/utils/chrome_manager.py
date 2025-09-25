@@ -24,7 +24,7 @@ def get_user_agent():
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
     return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 
-def _get_chrome_paths(self) -> list[str]:
+def _get_chrome_paths() -> list[str]:
     system = platform.system()
     if system == "Windows":
         return [
