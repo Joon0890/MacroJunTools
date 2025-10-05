@@ -144,9 +144,10 @@ class WebDriverController:
         last_exc = None
         while attempt <= retries:
             try:
-                chromedriver_autoinstall.install()
+                chromedriver_path = chromedriver_autoinstall.install()
+                service = Service(chromedriver_path)
                 options = self._build_options(headless)
-                self.browser = Chrome(options=options)
+                self.browser = Chrome(service=service, options=options)
                 return  # 성공
             except SessionNotCreatedException as e:
                 msg = str(e)
