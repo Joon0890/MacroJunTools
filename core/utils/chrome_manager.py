@@ -87,10 +87,6 @@ class WebDriverController:
     def __init__(self):
         self.browser: Optional["Chrome"] = None
 
-    def _make_profile_dir(self):
-        base = os.environ.get("RUNNER_TEMP") or None  # GH Actions면 RUNNER_TEMP 우선
-        return tempfile.mkdtemp(prefix="chrome_user_", dir=base)
-
     def _build_options(self, headless: bool):
         options = ChromeOptions()
         # 헤드리스 필수 옵션
@@ -144,10 +140,9 @@ class WebDriverController:
         last_exc = None
         while attempt <= retries:
             try:
-                chromedriver_path = chromedriver_autoinstall.install()
-                service = Service(chromedriver_path)
+                chromedriver_autoinstall.install()
                 options = self._build_options(headless)
-                self.browser = Chrome(service=service, options=options)
+                self.browser = Chrome(options=options)
                 return  # 성공
             except SessionNotCreatedException as e:
                 msg = str(e)

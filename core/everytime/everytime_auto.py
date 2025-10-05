@@ -7,6 +7,7 @@ from core.utils.custom_logging import GetLogger
 from core.utils.file.env_utils import load_env
 from core.utils.chrome_manager import ChromeDriverService
 from core.everytime.transform import _selenium_error_transform
+from core.utils.chrome_manager import SYSTEM
 
 class RunEverytimeAutoLike(ChromeDriverService):
     def __init__(self, headless, logging_file_path="./logs/everytime_autolike.log"):
@@ -18,12 +19,12 @@ class RunEverytimeAutoLike(ChromeDriverService):
         
     def get_id_password(self):
         # # .env 파일 및 config.yaml 파일 불러오기
-        # my_id, my_password = self.new_method()
-
-        # 수정된 코드
-        my_id = os.environ.get('EVERYTIME_USERNAME')
-        my_password = os.environ.get('EVERYTIME_PASSWORD')
-        
+        my_id, my_password = self.new_method()
+        # env_values = load_env()
+        # # .env에서 민감한 정보 가져오기
+        # my_id = env_values.get("EVERYTIME_USERNAME")
+        # my_password = env_values.get("EVERYTIME_PASSWORD")
+    
         print("Everytime ID, Password: %s, %s", my_id, my_password)
         
         if not my_id or not my_password:
@@ -33,11 +34,14 @@ class RunEverytimeAutoLike(ChromeDriverService):
         return my_id, my_password
 
     def new_method(self):
-        env_values = load_env()
-
-        # .env에서 민감한 정보 가져오기
-        my_id = env_values.get("EVERYTIME_USERNAME")
-        my_password = env_values.get("EVERYTIME_PASSWORD")
+        if SYSTEM == "Linux":
+            my_id = os.environ.get('EVERYTIME_USERNAME')
+            my_password = os.environ.get('EVERYTIME_PASSWORD')
+        else:
+            env_values = load_env()
+            # .env에서 민감한 정보 가져오기
+            my_id = env_values.get("EVERYTIME_USERNAME")
+            my_password = env_values.get("EVERYTIME_PASSWORD")
 
         return my_id, my_password
     
