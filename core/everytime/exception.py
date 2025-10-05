@@ -19,9 +19,11 @@ def exception_handler(func):
             raise NoSuchElementException(_selenium_error_transform(e))
         
         except (WebDriverException, NoSuchWindowException) as e:   
-            sys.exit("Terminating due to ChromeDriver connection failure.")
+            print("Terminating due to ChromeDriver connection failure.")
+            raise (WebDriverException, NoSuchWindowException)
 
         except Exception as e:
-            sys.exit("Terminating due to an unknown error.")
+            print("Terminating due to an unknown error.")
+            raise
 
     return wrapper
