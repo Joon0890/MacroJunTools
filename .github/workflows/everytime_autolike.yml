@@ -14,17 +14,39 @@ jobs:
     runs-on: ubuntu-latest  # 실행 환경 (우분투 최신 버전)
 
     steps:
-      # 0. 크롬 정리 
-      - name: Cleanup stale Chrome
-        run: |
-          pkill -9 -f "chrome|chromedriver" || true
-          rm -rf ~/.config/google-chrome/Singleton* || true
-          rm -rf /tmp/.org.chromium.Chromium.* || true
-
       # 1. 내 Repository의 코드를 Runner 환경에 가져오기
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            wget \
+            gnupg \
+            unzip \
+            curl \
+            xvfb \
+            libnss3 \
+            libatk-bridge2.0-0 \
+            libdrm2 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxrandr2 \
+            libgbm1 \
+            libgtk-3-0 \
+            libasound2 \
+            libxss1 \
+            libgconf-2-4 \
+            libxtst6 \
+            libxrandr2 \
+            libasound2 \
+            libpangocairo-1.0-0 \
+            libatk1.0-0 \
+            libcairo-gobject2 \
+            libgtk-3-0 \
+            libgdk-pixbuf2.0-0
+            
       # 2. Python 환경 설정
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,10 +56,17 @@ jobs:
       # 3. Chrome 설치 (Selenium Manager가 드라이버 자동 관리)
       - name: Install Google Chrome
         run: |
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google.list
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
-          google-chrome --version  # 설치 확인용 로그
 
+      - name: Setup Virtual Display
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+          sleep 3
+          
       # 4. 필요한 패키지 설치
       - name: Install dependencies
         run: |
@@ -50,6 +79,12 @@ jobs:
         env:
           EVERYTIME_USERNAME: ${{ secrets.EVERYTIME_USERNAME }}
           EVERYTIME_PASSWORD: ${{ secrets.EVERYTIME_PASSWORD }}
+
+      - name: Cleanup
+        if: always()
+        run: |
+          pkill -f chrome || true
+          pkill -f Xvfb || true
 
 
       

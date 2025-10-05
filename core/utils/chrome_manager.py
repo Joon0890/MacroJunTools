@@ -92,24 +92,52 @@ class WebDriverController:
         return tempfile.mkdtemp(prefix="chrome_user_", dir=base)
 
     def _build_options(self, headless: bool):
-        opts = ChromeOptions()
-        opts.add_argument("--disable-blink-features=AutomationControlled")
-        opts.add_argument(f"--user-agent={get_user_agent()}")
-        opts.add_argument("--lang=ko_KR")
-        opts.add_argument("--window-size=1920,1080")
-        opts.add_argument("--no-sandbox")
-        opts.add_argument("--disable-dev-shm-usage")
-        opts.add_argument("--no-first-run")
-        opts.add_argument("--no-default-browser-check")
-        opts.add_argument("--remote-debugging-port=0")  # 충돌 회피
-        # 고유 프로필
-        self._tmp_profile = tempfile.mkdtemp(prefix="chrome_user_")
-        opts.add_argument(f"--user-data-dir={self._tmp_profile}")
-        if headless:
-            opts.add_argument("--headless=new")
-        print(f"[Chrome] user-data-dir: {self._tmp_profile}")
-        print(f"[Chrome] args: {opts.arguments}")
-        return opts
+        options = ChromeOptions()
+        # 헤드리스 필수 옵션
+        options.add_argument('--headless=new')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        
+        # 리눅스 헤드리스 특화 옵션
+        options.add_argument('--disable-gpu')
+        options.add_argument('--disable-software-rasterizer')
+        options.add_argument('--disable-background-timer-throttling')
+        options.add_argument('--disable-backgrounding-occluded-windows')
+        options.add_argument('--disable-renderer-backgrounding')
+        options.add_argument('--disable-features=TranslateUI')
+        options.add_argument('--disable-ipc-flooding-protection')
+        
+        # 메모리 최적화
+        options.add_argument('--memory-pressure-off')
+        options.add_argument('--max_old_space_size=2048')
+        options.add_argument('--js-flags=--max-old-space-size=2048')
+        
+        # 네트워크 최적화
+        options.add_argument('--disable-background-networking')
+        options.add_argument('--disable-default-apps')
+        options.add_argument('--disable-extensions')
+        options.add_argument('--disable-sync')
+        
+        # 렌더링 최적화
+        options.add_argument('--disable-images')
+        options.add_argument('--disable-javascript')  # JS가 필요없다면
+        options.add_argument('--disable-plugins')
+        
+        # 프로세스 관리
+        options.add_argument('--single-process')  # 단일 프로세스 모드
+        options.add_argument('--no-zygote')
+        
+        # 임시 디렉토리 설정
+        temp_dir = tempfile.mkdtemp(prefix='chrome_headless_')
+        options.add_argument(f'--user-data-dir={temp_dir}')
+        options.add_argument(f'--data-path={temp_dir}')
+        options.add_argument(f'--disk-cache-dir={temp_dir}')
+        
+        # 원격 디버깅 비활성화 (헤드리스에서는 불필요)
+        options.add_argument('--remote-debugging-port=0')
+        # opts.add_argument("--disable-blink-features=AutomationControlled")
+        
+        return options
 
     def start_driver(self, headless: bool=False, retries: int=1):
         attempt = 0
