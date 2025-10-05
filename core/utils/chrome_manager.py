@@ -1,9 +1,11 @@
 from typing import Optional
 from subprocess import Popen
-import chromedriver_autoinstaller
 from selenium_stealth import stealth
 import os, socket, shlex, platform, traceback
 from selenium.webdriver import Chrome, ChromeOptions
+from selenium.webdriver.chrome.service import Service
+
+SYSTEM = platform.system()
 
 def find_available_port() -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -15,26 +17,24 @@ def find_chrome_path(CHROME_PATHS) -> Optional[str]:
     return next((path for path in CHROME_PATHS if os.path.exists(path)), None)
 
 def get_user_agent():
-    system = platform.system()
-    if system == "Windows":
+    if SYSTEM == "Windows":
         return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
-    elif system == "Linux":
+    elif SYSTEM == "Linux":
         return "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
-    elif system == "Darwin":  # MacOS
+    elif SYSTEM == "Darwin":  # MacOS
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
     return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 
 def _get_chrome_paths() -> list[str]:
-    system = platform.system()
-    if system == "Windows":
+    if SYSTEM == "Windows":
         return [
             r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
             r"C:\Program Files\Google\Chrome\Application\chrome.exe",
         ]
-    elif system == "Linux":
+    elif SYSTEM == "Linux":
         # GitHub Actions (Ubuntu)의 기본 Chrome 경로 추가
         return [r"/usr/bin/google-chrome"]
-    elif system == "Darwin": # MacOS
+    elif SYSTEM == "Darwin": # MacOS
         return [r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
     return []
 
@@ -83,16 +83,26 @@ class WebDriverController:
     def __init__(self):
         self.browser: Optional["Chrome"] = None
 
-    def start_driver(self, available_port: int):
-        chromedriver_autoinstaller.install()
+    def start_driver(self, available_port: int, headless: bool=False):
+        service = Service()
         options = ChromeOptions()
-        options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
+
+        if not (SYSTEM == 'Linux'):
+            options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
+        
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument(f"--user-agent={get_user_agent()}")
-        options.add_argument("--window-size=1920,1080") # 윈도우 크기 강제 지정
-        options.add_argument("--disable-gpu") 
         options.add_argument("--lang=ko_KR")
-        self.browser = Chrome(options=options)
+        
+        if SYSTEM == 'Linux':
+            options.add_argument("--no-sandbox")  
+            options.add_argument("--disable-dev-shm-usage") 
+
+        if headless:
+            options.add_argument("--headless=new") 
+            options.add_argument("--window-size=1920,1080") 
+
+        self.browser = Chrome(service=service, options=options)
 
     def navigate_to(self, url, maximize, wait):  
         self.browser.get(url)
@@ -171,15 +181,14 @@ class ChromeDriverService(WebDriverController):
 
     def start(self, url, headless: bool, maximize: bool = True, wait: int = 3):
         available_port = find_available_port()
-        self.process_manager.start_chrome(headless, available_port)
+        if not (SYSTEM == 'Linux'):
+            self.process_manager.start_chrome(headless, available_port)
         self.start_driver(available_port)
         self.navigate_to(url, maximize, wait)
 
     def stop(self):
         if self.process_manager.process:
             self.process_manager.stop_chrome()
-
-
     
 if __name__=='__main__':
     chromedriver = ChromeDriverService()

@@ -11,10 +11,10 @@ on:
 # 어떤 작업을 수행할지 정의하는 부분
 jobs:
   build:
-    runs-on: ubuntu-latest # 실행 환경 (우분투 최신 버전)
+    runs-on: ubuntu-latest  # 실행 환경 (우분투 최신 버전)
 
     steps:
-      # 1. 내 Repository에 있는 코드를 Runner(가상 머신)로 가져옴
+      # 1. 내 Repository의 코드를 Runner 환경에 가져오기
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -22,30 +22,31 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10' # 사용하시는 파이썬 버전 입력
+          python-version: '3.10'  # 사용 중인 파이썬 버전 입력
 
-      # 3. 필요한 라이브러리 설치
+      # 3. Chrome 설치 (Selenium Manager가 드라이버 자동 관리)
+      - name: Install Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version  # 설치 확인용 로그
+
+      # 4. 필요한 패키지 설치
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4. Chrome 및 ChromeDriver 설치 (중요!)
-      # ubuntu-latest 환경에는 Chrome이 이미 설치되어 있습니다.
-      # chromedriver-autoinstaller가 자동으로 버전에 맞는 드라이버를 설치해줍니다.
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-
-      # 5. 메인 파이썬 스크립트 실행
-      - name: Run Everytime Auto-Like
-        run: python main.py everytime --headless # 실행할 메인 파일 이름 입력
+      # 5. 메인 스크립트 실행 (headless 모드로)
+      - name: Run automation
+        run: python main.py everytime --headless
         env:
           EVERYTIME_USERNAME: ${{ secrets.EVERYTIME_USERNAME }}
           EVERYTIME_PASSWORD: ${{ secrets.EVERYTIME_PASSWORD }}
 
-       # 6. 로그 파일 아티팩트로 업로드
+      # 6. 로그 파일 업로드
       - name: Upload log file
         uses: actions/upload-artifact@v4
         with:
-          name: logs  # 생성될 아티팩트의 이름 (자유롭게 지정 가능)
-          path: ./logs/everytime_autolike.log  # 업로드할 로그 파일의 정확한 경로
+          name: logs
+          path: ./logs/everytime_autolike.log
