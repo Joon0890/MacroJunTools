@@ -6,7 +6,8 @@ import os, socket, shlex, platform, traceback
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 
-SYSTEM = platform.system()
+# SYSTEM = platform.system()
+SYSTEM = 'Linux'
 
 def find_available_port() -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -44,8 +45,7 @@ class ChromeProcessManager:
         "--disable-gpu",
         "--disable-dev-shm-usage",
         "--no-first-run",
-        "--log-level=3",
-        f"--user-data-dir={tempfile.mkdtemp()}"
+        "--log-level=3"
     ]
 
     def __init__(self):
@@ -68,6 +68,7 @@ class ChromeProcessManager:
         self.CHROME_OPTIONS = value
 
     def start_chrome(self, headless: bool, available_port: int):
+        self.CHROME_OPTIONS.append(f"--user-data-dir={tempfile.mkdtemp()}")
         chrome_path = find_chrome_path(_get_chrome_paths())
         chrome_command = [chrome_path] + self.CHROME_OPTIONS
         chrome_command.append(f"--remote-debugging-port={available_port}")
@@ -94,17 +95,16 @@ class WebDriverController:
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument(f"--user-agent={get_user_agent()}")
         options.add_argument("--lang=ko_KR")
-        
+        options.add_argument("--window-size=1920,1080")
+
         if SYSTEM == 'Linux':
-            unique_profile = tempfile.mkdtemp(prefix="chrome_user_")
-            options.add_argument(f"--user-data-dir={unique_profile}")
+            # options.add_argument(f"--user-data-dir={tempfile.mkdtemp(prefix="chrome_user_")}")
             options.add_argument("--no-sandbox")  
             options.add_argument("--disable-dev-shm-usage") 
 
         if headless:
             options.add_argument("--headless=new") 
-            options.add_argument("--window-size=1920,1080") 
-
+             
         self.browser = Chrome(service=service, options=options)
 
     def navigate_to(self, url, maximize, wait):  
@@ -199,3 +199,4 @@ if __name__=='__main__':
     chromedriver = ChromeDriverService()
 
     chromedriver.start("https://www.naver.com", False)
+    input("브라우저를 닫지 않고 유지합니다. 종료하려면 Enter를 누르세요.\n")

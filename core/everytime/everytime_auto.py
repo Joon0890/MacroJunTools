@@ -18,11 +18,7 @@ class RunEverytimeAutoLike(ChromeDriverService):
         
     def get_id_password(self):
         # # .env 파일 및 config.yaml 파일 불러오기
-        # env_values = load_env()
-
-        # # .env에서 민감한 정보 가져오기
-        # my_id = env_values.get("EVERYTIME_USERNAME")
-        # my_password = env_values.get("EVERYTIME_PASSWORD")
+        # my_id, my_password = self.new_method()
 
         # 수정된 코드
         my_id = os.environ.get('EVERYTIME_USERNAME')
@@ -34,6 +30,15 @@ class RunEverytimeAutoLike(ChromeDriverService):
             self.logger.error("Everytime ID, Password are missing in .env file!")
             raise
 
+        return my_id, my_password
+
+    def new_method(self):
+        env_values = load_env()
+
+        # .env에서 민감한 정보 가져오기
+        my_id = env_values.get("EVERYTIME_USERNAME")
+        my_password = env_values.get("EVERYTIME_PASSWORD")
+        
         return my_id, my_password
     
     def start_running(self, headless):
