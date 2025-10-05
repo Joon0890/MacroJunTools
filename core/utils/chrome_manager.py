@@ -136,7 +136,7 @@ class WebDriverController:
         # 원격 디버깅 비활성화 (헤드리스에서는 불필요)
         options.add_argument('--remote-debugging-port=0')
         # opts.add_argument("--disable-blink-features=AutomationControlled")
-        
+
         return options
 
     def start_driver(self, headless: bool=False, retries: int=1):
@@ -212,7 +212,7 @@ class WebDriverController:
             self._tmp_profile = None
 
 
-class AdvancedStealthService:
+class WinAdvancedStealthService:
     def __init__(self, stealth_config=None):
         self.stealth_config = stealth_config or {
             "languages": ["en-US", "en"],
@@ -240,11 +240,163 @@ class AdvancedStealthService:
 
         for script in scripts:
             browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})
+
+
+class LinuxAdvancedStealthService:
+    def __init__(self, stealth_config=None):
+        self.stealth_config = stealth_config or {
+            "languages": ["ko-KR", "ko", "en-US", "en"],  # 한국어 우선
+            "vendor": "Google Inc.",
+            "platform": "Linux x86_64",  # 리눅스 플랫폼
+            "webgl_vendor": "Mesa",  # 리눅스 일반적인 WebGL 벤더
+            "renderer": "llvmpipe (LLVM 12.0.1, 256 bits)",  # 리눅스 소프트웨어 렌더러
+            "fix_hairline": True,
+            "chrome_app": True,
+            "chrome_csi": True,
+            "chrome_load_times": True,
+            "chrome_runtime": True,
+            "iframe_content_window": True,
+            "media_codecs": True,
+            "navigator_permissions": True,
+            "navigator_plugins": True,
+            "navigator_webdriver": True,
+            "outerdimensions": True,
+            "hairline": True
+        }
+
+    def apply_stealth(self, browser):
+        """스텔스 설정 적용"""
+        try:
+            from selenium_stealth import stealth
+            self._apply_stealth_library(browser, self.stealth_config)
+        except ImportError:
+            print("selenium-stealth not installed, applying manual stealth")
+        
+        self._apply_additional_stealth(browser)
+        self._apply_linux_specific_stealth(browser)
+
+    def _apply_stealth_library(self, browser, stealth_config):
+        """selenium-stealth 라이브러리 적용"""
+        from selenium_stealth import stealth
+        stealth(browser, **stealth_config)
+
+    def _apply_additional_stealth(self, browser):
+        """추가 스텔스 스크립트"""
+        scripts = [
+            # 웹드라이버 감지 방지
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})",
             
+            # Chrome 런타임 객체 생성
+            "window.navigator.chrome = {runtime: {}, loadTimes: function(){}, csi: function(){}};",
+            
+            # 언어 설정 (한국어 포함)
+            "Object.defineProperty(navigator, 'languages', {get: () => ['ko-KR', 'ko', 'en-US', 'en']})",
+            "Object.defineProperty(navigator, 'language', {get: () => 'ko-KR'})",
+            
+            # 플러그인 정보
+            "Object.defineProperty(navigator, 'plugins', {get: () => Array.from({length: 5}, (_, i) => ({name: `Plugin ${i+1}`}))})",
+            
+            # 리눅스 플랫폼 정보
+            "Object.defineProperty(navigator, 'platform', {get: () => 'Linux x86_64'})",
+            "Object.defineProperty(navigator, 'userAgent', {get: () => navigator.userAgent.replace(/HeadlessChrome/, 'Chrome')})",
+            
+            # 하드웨어 정보 (리눅스 서버 환경)
+            "Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 4})",
+            "Object.defineProperty(navigator, 'deviceMemory', {get: () => 8})",
+            
+            # 권한 API
+            """
+            const originalQuery = window.navigator.permissions.query;
+            window.navigator.permissions.query = (parameters) => (
+                parameters.name === 'notifications' ?
+                Promise.resolve({ state: Notification.permission }) :
+                originalQuery(parameters)
+            );
+            """,
+            
+            # WebGL 정보 (리눅스 서버 환경)
+            """
+            const getParameter = WebGLRenderingContext.getParameter;
+            WebGLRenderingContext.prototype.getParameter = function(parameter) {
+                if (parameter === 37445) return 'Mesa';
+                if (parameter === 37446) return 'llvmpipe (LLVM 12.0.1, 256 bits)';
+                return getParameter(parameter);
+            };
+            """,
+            
+            # 배터리 API 제거 (서버 환경)
+            "delete navigator.getBattery;",
+            
+            # 화면 정보 (일반적인 서버 해상도)
+            "Object.defineProperty(screen, 'width', {get: () => 1920});",
+            "Object.defineProperty(screen, 'height', {get: () => 1080});",
+            "Object.defineProperty(screen, 'availWidth', {get: () => 1920});",
+            "Object.defineProperty(screen, 'availHeight', {get: () => 1080});",
+        ]
+
+        for script in scripts:
+            try:
+                browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})
+            except Exception as e:
+                print(f"Failed to execute stealth script: {e}")
+
+    def _apply_linux_specific_stealth(self, browser):
+        """리눅스 특화 스텔스 설정"""
+        linux_scripts = [
+            # 타임존 설정 (한국 시간)
+            "Object.defineProperty(Intl.DateTimeFormat.prototype, 'resolvedOptions', {value: function(){return {timeZone: 'Asia/Seoul', locale: 'ko-KR'}}});",
+            
+            # 폰트 정보 (리눅스 일반 폰트)
+            """
+            Object.defineProperty(document, 'fonts', {
+                get: () => ({
+                    check: () => true,
+                    ready: Promise.resolve(),
+                    addEventListener: () => {},
+                    removeEventListener: () => {}
+                })
+            });
+            """,
+            
+            # 미디어 장치 정보
+            """
+            Object.defineProperty(navigator, 'mediaDevices', {
+                get: () => ({
+                    enumerateDevices: () => Promise.resolve([
+                        {deviceId: 'default', kind: 'audioinput', label: 'Default - Built-in Microphone', groupId: 'group1'},
+                        {deviceId: 'default', kind: 'audiooutput', label: 'Default - Built-in Speakers', groupId: 'group1'}
+                    ]),
+                    getUserMedia: () => Promise.reject(new Error('Permission denied'))
+                })
+            });
+            """,
+            
+            # 연결 정보 (유선 연결)
+            """
+            Object.defineProperty(navigator, 'connection', {
+                get: () => ({
+                    effectiveType: '4g',
+                    type: 'ethernet',
+                    downlink: 10,
+                    rtt: 50
+                })
+            });
+            """,
+        ]
+
+        for script in linux_scripts:
+            try:
+                browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})
+            except Exception as e:
+                print(f"Failed to execute Linux-specific stealth script: {e}")
+
 class ChromeDriverService(WebDriverController):
     def __init__(self, args=None, paths=None, stealth_config=None):
         self.process_manager: ChromeProcessManager = ChromeProcessManager()
-        self.stealth_manager: AdvancedStealthService = AdvancedStealthService(stealth_config)
+        if SYSTEM == 'Linux':
+            self.stealth_manager: LinuxAdvancedStealthService = LinuxAdvancedStealthService(stealth_config)
+        else:
+            self.stealth_manager: WinAdvancedStealthService = WinAdvancedStealthService(stealth_config)
         super().__init__()
 
         if args is not None:

@@ -53,8 +53,8 @@ class RunEverytimeAutoLike(ChromeDriverService):
                 raise SystemExit("Chrome browser failed to start.")
 
             login_everytime(self.browser, self.logger, *self.get_id_password())
-            move_to_board(self.browser, self.logger, "자유게시판")
             self.stealth_manager.apply_stealth(self.browser)
+            move_to_board(self.browser, self.logger, "자유게시판")
             start_article, page_num = find_starting_point(self.browser, self.logger, self.logging_file_path)
 
             print("Starting from article: %s, page number: %s", start_article, page_num)
