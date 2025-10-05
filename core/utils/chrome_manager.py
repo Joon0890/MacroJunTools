@@ -105,6 +105,9 @@ class WebDriverController:
 
         if headless:
             options.add_argument("--headless=new") 
+
+        print(f"[Chrome] user-data-dir: {self._tmp_profile or '(default)'}")
+
              
         self.browser = Chrome(service=service, options=options)
 
