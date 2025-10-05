@@ -5,6 +5,7 @@ from selenium_stealth import stealth
 import os, socket, shlex, platform, traceback
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import SessionNotCreatedException
 
 # SYSTEM = platform.system()
 SYSTEM = 'Linux'
@@ -84,6 +85,56 @@ class ChromeProcessManager:
 class WebDriverController:
     def __init__(self):
         self.browser: Optional["Chrome"] = None
+
+    def _build_options(self, headless: bool):
+        opts = ChromeOptions()
+        opts.add_argument("--disable-blink-features=AutomationControlled")
+        opts.add_argument(f"--user-agent={get_user_agent()}")
+        opts.add_argument("--lang=ko_KR")
+        opts.add_argument("--window-size=1920,1080")
+        opts.add_argument("--no-sandbox")
+        opts.add_argument("--disable-dev-shm-usage")
+        opts.add_argument("--no-first-run")
+        opts.add_argument("--no-default-browser-check")
+        opts.add_argument("--remote-debugging-port=0")  # 충돌 회피
+        self._tmp_profile = tempfile.mkdtemp(prefix="chrome_user_")
+        opts.add_argument(f"--user-data-dir={self._tmp_profile}")
+        if headless:
+            opts.add_argument("--headless=new")
+        print(f"[Chrome] user-data-dir: {self._tmp_profile}")
+        print(f"[Chrome] args: {opts.arguments}")
+        return opts
+
+    def start_driver(self, headless: bool=False, retries: int=1):
+        attempt = 0
+        last_exc = None
+        while attempt <= retries:
+            try:
+                service = Service()
+                options = self._build_options(headless)
+                self.browser = Chrome(service=service, options=options)
+                return  # 성공
+            except SessionNotCreatedException as e:
+                msg = str(e)
+                last_exc = e
+                # 현재 프로필 정리 후 재시도
+                if self._tmp_profile:
+                    shutil.rmtree(self._tmp_profile, ignore_errors=True)
+                    self._tmp_profile = None
+                if "user data directory is already in use" in msg and attempt < retries:
+                    attempt += 1
+                    continue
+                raise  # 다른 원인이거나 재시도 소진
+            except Exception as e:
+                # 다른 예외
+                # 실패해도 프로필 정리
+                if self._tmp_profile:
+                    shutil.rmtree(self._tmp_profile, ignore_errors=True)
+                    self._tmp_profile = None
+                raise
+        if last_exc:
+            raise last_exc
+
 
     def start_driver(self, available_port: int, headless: bool=False):
         service = Service()
