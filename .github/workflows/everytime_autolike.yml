@@ -15,8 +15,12 @@ jobs:
 
     steps:
       # 0. 크롬 정리 
-      - name: Clean leftover Chrome processes
-        run: pkill -9 chrome || true
+      - name: Clean up old Chrome data
+        run: |
+          pkill -9 chrome || true
+          rm -rf /tmp/.com.google* || true
+          rm -rf /tmp/.org.chromium* || true
+          rm -rf /tmp/chrome_user_* || true
 
       # 1. 내 Repository의 코드를 Runner 환경에 가져오기
       - name: Checkout repository
