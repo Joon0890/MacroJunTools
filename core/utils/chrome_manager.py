@@ -87,110 +87,111 @@ class WebDriverController:
     def __init__(self):
         self.browser: Optional["Chrome"] = None
 
-    def _build_options(self, headless: bool):
-        options = ChromeOptions()
-        # 헤드리스 필수 옵션
-        options.add_argument('--headless=new')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        
-        # 리눅스 헤드리스 특화 옵션
-        options.add_argument('--disable-gpu')
-        options.add_argument('--disable-software-rasterizer')
-        options.add_argument('--disable-background-timer-throttling')
-        options.add_argument('--disable-backgrounding-occluded-windows')
-        options.add_argument('--disable-renderer-backgrounding')
-        options.add_argument('--disable-features=TranslateUI')
-        options.add_argument('--disable-ipc-flooding-protection')
-        
-        # 메모리 최적화
-        options.add_argument('--memory-pressure-off')
-        options.add_argument('--max_old_space_size=2048')
-        options.add_argument('--js-flags=--max-old-space-size=2048')
-        
-        # 네트워크 최적화
-        options.add_argument('--disable-background-networking')
-        options.add_argument('--disable-default-apps')
-        options.add_argument('--disable-extensions')
-        options.add_argument('--disable-sync')
-        
-        # 렌더링 최적화
-        options.add_argument('--disable-images')
-        options.add_argument('--disable-javascript')  # JS가 필요없다면
-        options.add_argument('--disable-plugins')
-        
-        # 프로세스 관리
-        options.add_argument('--single-process')  # 단일 프로세스 모드
-        options.add_argument('--no-zygote')
-        
-        # 임시 디렉토리 설정
-        self._tmp_profile = tempfile.mkdtemp(prefix='chrome_headless_')
-        options.add_argument(f'--user-data-dir={self._tmp_profile}')
-        options.add_argument(f'--data-path={self._tmp_profile}')
-        options.add_argument(f'--disk-cache-dir={self._tmp_profile}')
-        
-        # 원격 디버깅 비활성화 (헤드리스에서는 불필요)
-        options.add_argument('--remote-debugging-port=0')
-        # opts.add_argument("--disable-blink-features=AutomationControlled")
-
-        return options
-
-    def start_driver(self, headless: bool=False, retries: int=1):
-        attempt = 0
-        last_exc = None
-        while attempt <= retries:
-            try:
-                chromedriver_autoinstall.install()
-                options = self._build_options(headless)
-                self.browser = Chrome(options=options)
-                return  # 성공
-            except SessionNotCreatedException as e:
-                msg = str(e)
-                last_exc = e
-                # 현재 프로필 정리 후 재시도
-                if self._tmp_profile:
-                    shutil.rmtree(self._tmp_profile, ignore_errors=True)
-                    self._tmp_profile = None
-                if "user data directory is already in use" in msg and attempt < retries:
-                    attempt += 1
-                    continue
-                raise  # 다른 원인이거나 재시도 소진
-            except Exception as e:
-                # 다른 예외
-                # 실패해도 프로필 정리
-                if self._tmp_profile:
-                    shutil.rmtree(self._tmp_profile, ignore_errors=True)
-                    self._tmp_profile = None
-                raise
-        if last_exc:
-            raise last_exc
-
-
-    # def start_driver(self, available_port: int, headless: bool=False):
-    #     service = Service()
+    # def _build_options(self, headless: bool):
     #     options = ChromeOptions()
-
-    #     if not (SYSTEM == 'Linux'):
-    #         options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
+    #     # 헤드리스 필수 옵션
+    #     options.add_argument('--headless=new')
+    #     options.add_argument('--no-sandbox')
+    #     options.add_argument('--disable-dev-shm-usage')
         
-    #     options.add_argument("--disable-blink-features=AutomationControlled")
-    #     options.add_argument(f"--user-agent={get_user_agent()}")
-    #     options.add_argument("--lang=ko_KR")
-    #     options.add_argument("--window-size=1920,1080")
+    #     # 리눅스 헤드리스 특화 옵션
+    #     options.add_argument('--disable-gpu')
+    #     options.add_argument('--disable-software-rasterizer')
+    #     options.add_argument('--disable-background-timer-throttling')
+    #     options.add_argument('--disable-backgrounding-occluded-windows')
+    #     options.add_argument('--disable-renderer-backgrounding')
+    #     options.add_argument('--disable-features=TranslateUI')
+    #     options.add_argument('--disable-ipc-flooding-protection')
+        
+    #     # 메모리 최적화
+    #     options.add_argument('--memory-pressure-off')
+    #     options.add_argument('--max_old_space_size=2048')
+    #     options.add_argument('--js-flags=--max-old-space-size=2048')
+        
+    #     # 네트워크 최적화
+    #     options.add_argument('--disable-background-networking')
+    #     options.add_argument('--disable-default-apps')
+    #     options.add_argument('--disable-extensions')
+    #     options.add_argument('--disable-sync')
+        
+    #     # 렌더링 최적화
+    #     options.add_argument('--disable-images')
+    #     options.add_argument('--disable-javascript')  # JS가 필요없다면
+    #     options.add_argument('--disable-plugins')
+        
+    #     # 프로세스 관리
+    #     options.add_argument('--single-process')  # 단일 프로세스 모드
+    #     options.add_argument('--no-zygote')
+        
+    #     # 임시 디렉토리 설정
+    #     self._tmp_profile = tempfile.mkdtemp(prefix='chrome_headless_')
+    #     options.add_argument(f'--user-data-dir={self._tmp_profile}')
+    #     options.add_argument(f'--data-path={self._tmp_profile}')
+    #     options.add_argument(f'--disk-cache-dir={self._tmp_profile}')
+        
+    #     # 원격 디버깅 비활성화 (헤드리스에서는 불필요)
+    #     options.add_argument('--remote-debugging-port=0')
+    #     # opts.add_argument("--disable-blink-features=AutomationControlled")
 
-    #     if SYSTEM == 'Linux':
-    #         self._tmp_profile = tempfile.mkdtemp(prefix='chrome_user_')
-    #         options.add_argument(f"--user-data-dir={self._tmp_profile}")
-    #         options.add_argument("--no-sandbox")
-    #         options.add_argument("--disable-dev-shm-usage")
+    #     return options
 
-    #     if headless:
-    #         options.add_argument("--headless=new") 
+    # def start_driver(self, headless: bool=False, retries: int=1):
+    #     attempt = 0
+    #     last_exc = None
+    #     while attempt <= retries:
+    #         try:
+    #             chromedriver_autoinstall.install()
+    #             options = self._build_options(headless)
+    #             self.browser = Chrome(options=options)
+    #             return  # 성공
+    #         except SessionNotCreatedException as e:
+    #             msg = str(e)
+    #             last_exc = e
+    #             # 현재 프로필 정리 후 재시도
+    #             if self._tmp_profile:
+    #                 shutil.rmtree(self._tmp_profile, ignore_errors=True)
+    #                 self._tmp_profile = None
+    #             if "user data directory is already in use" in msg and attempt < retries:
+    #                 attempt += 1
+    #                 continue
+    #             raise  # 다른 원인이거나 재시도 소진
+    #         except Exception as e:
+    #             # 다른 예외
+    #             # 실패해도 프로필 정리
+    #             if self._tmp_profile:
+    #                 shutil.rmtree(self._tmp_profile, ignore_errors=True)
+    #                 self._tmp_profile = None
+    #             raise
+    #     if last_exc:
+    #         raise last_exc
 
-    #     print(f"[Chrome] user-data-dir: {self._tmp_profile or '(default)'}")
 
-             
-    #     self.browser = Chrome(service=service, options=options)
+    def start_driver(self, available_port: int, headless: bool=False):
+        service = Service()
+        options = ChromeOptions()
+
+        if not (SYSTEM == 'Linux'):
+            options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
+        
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument(f"--user-agent={get_user_agent()}")
+        options.add_argument("--lang=ko_KR")
+        options.add_argument("--window-size=1920,1080")
+
+        if SYSTEM == 'Linux':
+            self._tmp_profile = tempfile.mkdtemp(prefix='chrome_user_')
+            options.add_argument(f"--user-data-dir={self._tmp_profile}")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
+
+        if headless:
+            options.add_argument("--headless=new") 
+
+        print(f"[Chrome] user-data-dir: {self._tmp_profile or '(default)'}")
+
+        self.browser = Chrome(service=service, options=options)    
+        return
+
 
     def navigate_to(self, url, maximize, wait):  
         self.browser.get(url)
