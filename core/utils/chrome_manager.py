@@ -1,4 +1,4 @@
-import tempfile, os
+import tempfile, os, shutil
 from typing import Optional
 from subprocess import Popen
 from selenium_stealth import stealth
@@ -98,9 +98,10 @@ class WebDriverController:
         options.add_argument("--window-size=1920,1080")
 
         if SYSTEM == 'Linux':
-            # options.add_argument(f"--user-data-dir={tempfile.mkdtemp(prefix="chrome_user_")}")
-            options.add_argument("--no-sandbox")  
-            options.add_argument("--disable-dev-shm-usage") 
+            self._tmp_profile = tempfile.mkdtemp(prefix='chrome_user_')
+            options.add_argument(f"--user-data-dir={self._tmp_profile}")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
 
         if headless:
             options.add_argument("--headless=new") 
@@ -117,6 +118,10 @@ class WebDriverController:
         if self.browser:
             self.browser.quit() 
             self.browser = None  # WebDriver 정리
+
+        if self._tmp_profile:
+            shutil.rmtree(self._tmp_profile, ignore_errors=True)
+            self._tmp_profile = None
 
 
 class AdvancedStealthService:
