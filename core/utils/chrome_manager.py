@@ -128,10 +128,10 @@ class WebDriverController:
         options.add_argument('--no-zygote')
         
         # 임시 디렉토리 설정
-        temp_dir = tempfile.mkdtemp(prefix='chrome_headless_')
-        options.add_argument(f'--user-data-dir={temp_dir}')
-        options.add_argument(f'--data-path={temp_dir}')
-        options.add_argument(f'--disk-cache-dir={temp_dir}')
+        self._tmp_profile = tempfile.mkdtemp(prefix='chrome_headless_')
+        options.add_argument(f'--user-data-dir={self._tmp_profile}')
+        options.add_argument(f'--data-path={self._tmp_profile}')
+        options.add_argument(f'--disk-cache-dir={self._tmp_profile}')
         
         # 원격 디버깅 비활성화 (헤드리스에서는 불필요)
         options.add_argument('--remote-debugging-port=0')
