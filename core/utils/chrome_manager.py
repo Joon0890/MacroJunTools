@@ -1,3 +1,4 @@
+import tempfile, os
 from typing import Optional
 from subprocess import Popen
 from selenium_stealth import stealth
@@ -44,7 +45,7 @@ class ChromeProcessManager:
         "--disable-dev-shm-usage",
         "--no-first-run",
         "--log-level=3",
-        # "--user-data-dir=C:\\chrometemp"
+        f"--user-data-dir={tempfile.mkdtemp()}"
     ]
 
     def __init__(self):
@@ -95,6 +96,8 @@ class WebDriverController:
         options.add_argument("--lang=ko_KR")
         
         if SYSTEM == 'Linux':
+            unique_profile = tempfile.mkdtemp(prefix="chrome_user_")
+            options.add_argument(f"--user-data-dir={unique_profile}")
             options.add_argument("--no-sandbox")  
             options.add_argument("--disable-dev-shm-usage") 
 
