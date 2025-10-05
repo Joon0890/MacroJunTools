@@ -24,23 +24,23 @@ def login_everytime(
         logger.error("Everytime ID and Password are None")
         raise ValueError("Everytime credentials are missing")
 
-    print("Attempting to log in with ID: %s", my_id)
+    logger.info("Attempting to log in with ID: %s", my_id)
 
     try:
         if browser.find_element(By.CSS_SELECTOR, "div#submenu"):
-            print("Already logged in, skipping login process.")
+            logger.info("Already logged in, skipping login process.")
             return False
     except NoSuchElementException:
-        print("Not logged in, proceeding with login.")
+        logger.warning("Not logged in, proceeding with login.")
 
     try:
         signin_button = browser.find_element(By.CSS_SELECTOR, "a.signin")
-        print("Sign-in button found, clicking...")
+        logger.info("Sign-in button found, clicking...")
         signin_button.click()
     except NoSuchElementException:
-        print("Sign-in button not found, skipping...")
+        logger.warning("Sign-in button not found, skipping...")
 
-    print("Locating login form...")
+    logger.info("Locating login form...")
     import time
     time.sleep(3)
     login_form = browser.find_element(By.CSS_SELECTOR, "form[method='post']")
@@ -49,20 +49,20 @@ def login_everytime(
     password_elem = login_form.find_element(By.NAME, "password")
     keep_checkbox = login_form.find_element(By.CLASS_NAME, "keep")
 
-    print("Entering credentials...")
+    logger.info("Entering credentials...")
     id_elem.send_keys(my_id)
     password_elem.send_keys(my_password)
 
-    print("Checking 'Keep me logged in' checkbox...")
+    logger.info("Checking 'Keep me logged in' checkbox...")
     keep_checkbox.click()
 
-    print("Submitting login form...")
+    logger.info("Submitting login form...")
     password_elem.send_keys(Keys.ENTER)
 
-    print("Waiting for %s seconds after login attempt...", wait_time)
+    logger.info("Waiting for %s seconds after login attempt...", wait_time)
     time.sleep(wait_time)
 
-    print("Login process completed successfully.")
+    logger.info("Login process completed successfully.")
     return True
 
 
