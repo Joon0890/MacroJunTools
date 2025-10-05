@@ -2,3 +2,4 @@ selenium
 requests
 python-dotenv
 selenium_stealth
+chromedriver_autoinstall
