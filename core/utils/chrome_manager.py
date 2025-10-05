@@ -86,6 +86,10 @@ class WebDriverController:
     def __init__(self):
         self.browser: Optional["Chrome"] = None
 
+    def _make_profile_dir(self):
+        base = os.environ.get("RUNNER_TEMP") or None  # GH Actions면 RUNNER_TEMP 우선
+        return tempfile.mkdtemp(prefix="chrome_user_", dir=base)
+
     def _build_options(self, headless: bool):
         opts = ChromeOptions()
         opts.add_argument("--disable-blink-features=AutomationControlled")
@@ -97,6 +101,7 @@ class WebDriverController:
         opts.add_argument("--no-first-run")
         opts.add_argument("--no-default-browser-check")
         opts.add_argument("--remote-debugging-port=0")  # 충돌 회피
+        # 고유 프로필
         self._tmp_profile = tempfile.mkdtemp(prefix="chrome_user_")
         opts.add_argument(f"--user-data-dir={self._tmp_profile}")
         if headless:
@@ -136,31 +141,31 @@ class WebDriverController:
             raise last_exc
 
 
-    def start_driver(self, available_port: int, headless: bool=False):
-        service = Service()
-        options = ChromeOptions()
+    # def start_driver(self, available_port: int, headless: bool=False):
+    #     service = Service()
+    #     options = ChromeOptions()
 
-        if not (SYSTEM == 'Linux'):
-            options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
+    #     if not (SYSTEM == 'Linux'):
+    #         options.add_experimental_option("debuggerAddress", f"127.0.0.1:{available_port}")
         
-        options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_argument(f"--user-agent={get_user_agent()}")
-        options.add_argument("--lang=ko_KR")
-        options.add_argument("--window-size=1920,1080")
+    #     options.add_argument("--disable-blink-features=AutomationControlled")
+    #     options.add_argument(f"--user-agent={get_user_agent()}")
+    #     options.add_argument("--lang=ko_KR")
+    #     options.add_argument("--window-size=1920,1080")
 
-        if SYSTEM == 'Linux':
-            self._tmp_profile = tempfile.mkdtemp(prefix='chrome_user_')
-            options.add_argument(f"--user-data-dir={self._tmp_profile}")
-            options.add_argument("--no-sandbox")
-            options.add_argument("--disable-dev-shm-usage")
+    #     if SYSTEM == 'Linux':
+    #         self._tmp_profile = tempfile.mkdtemp(prefix='chrome_user_')
+    #         options.add_argument(f"--user-data-dir={self._tmp_profile}")
+    #         options.add_argument("--no-sandbox")
+    #         options.add_argument("--disable-dev-shm-usage")
 
-        if headless:
-            options.add_argument("--headless=new") 
+    #     if headless:
+    #         options.add_argument("--headless=new") 
 
-        print(f"[Chrome] user-data-dir: {self._tmp_profile or '(default)'}")
+    #     print(f"[Chrome] user-data-dir: {self._tmp_profile or '(default)'}")
 
              
-        self.browser = Chrome(service=service, options=options)
+    #     self.browser = Chrome(service=service, options=options)
 
     def navigate_to(self, url, maximize, wait):  
         self.browser.get(url)
