@@ -44,7 +44,7 @@ class ChromeProcessManager:
         "--disable-dev-shm-usage",
         "--no-first-run",
         "--log-level=3",
-        "--user-data-dir=C:\\chrometemp"
+        # "--user-data-dir=C:\\chrometemp"
     ]
 
     def __init__(self):
