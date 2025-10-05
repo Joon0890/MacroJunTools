@@ -51,11 +51,5 @@ jobs:
           EVERYTIME_USERNAME: ${{ secrets.EVERYTIME_USERNAME }}
           EVERYTIME_PASSWORD: ${{ secrets.EVERYTIME_PASSWORD }}
 
-      # 6. 로그 파일 업로드
-      - name: Upload log file
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs
-          path: ./logs/everytime_autolike.log
 
       
