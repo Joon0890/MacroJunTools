@@ -52,10 +52,9 @@ jobs:
       # 3. Chrome 설치 (Selenium Manager가 드라이버 자동 관리)
       - name: Install Google Chrome
         run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google.list
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
+          google-chrome --version  # 설치 확인용 로그
 
       - name: Setup Virtual Display
         run: |
@@ -68,7 +67,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       # 5. 메인 스크립트 실행 (headless 모드로)
       - name: Run automation
         run: python main.py everytime --headless
@@ -81,6 +79,5 @@ jobs:
         run: |
           pkill -f chrome || true
           pkill -f Xvfb || true
-
 
       
