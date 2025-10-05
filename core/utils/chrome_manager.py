@@ -192,6 +192,8 @@ class ChromeDriverService(WebDriverController):
     def stop(self):
         if self.process_manager.process:
             self.process_manager.stop_chrome()
+        if self.browser: 
+            self.quit_driver()
     
 if __name__=='__main__':
     chromedriver = ChromeDriverService()
