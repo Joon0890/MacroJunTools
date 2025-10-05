@@ -1,4 +1,5 @@
 import tempfile, os, shutil
+import chromedriver_autoinstall
 from typing import Optional
 from subprocess import Popen
 from selenium_stealth import stealth
@@ -115,9 +116,9 @@ class WebDriverController:
         last_exc = None
         while attempt <= retries:
             try:
-                service = Service()
+                chromedriver_autoinstall.install()
                 options = self._build_options(headless)
-                self.browser = Chrome(service=service, options=options)
+                self.browser = Chrome(options=options)
                 return  # 성공
             except SessionNotCreatedException as e:
                 msg = str(e)

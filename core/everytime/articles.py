@@ -21,12 +21,12 @@ def _find_first_article(
 ) -> Optional[str]:
     """Finds the starting article for automation."""
 
-    logger.info("Reading logs to find the starting article...")
+    print("Reading logs to find the starting article...")
 
     try:
         strLogs: str = read_logs(filename, encoding, num_lines)
         if not strLogs:
-            logger.error("Log file is empty or missing.")
+            print("Log file is empty or missing.")
             return None
         
         found_count = 0
@@ -36,16 +36,16 @@ def _find_first_article(
             match = re.search(pattern, row)
             if match:
                 start_article_text = match.group(1)
-                logger.info("Found the starting point for likes in logs: %s", start_article_text)
+                print("Found the starting point for likes in logs: %s", start_article_text)
                 start_article.append(start_article_text)
                 found_count += 1
                 if found_count >= 5:
                     return start_article
-        logger.warning("No matching articles found in logs.")
+        print("No matching articles found in logs.")
         return None
     
     except Exception as e:
-        logger.error("Error while finding the first article: %s", e)
+        print("Error while finding the first article: %s", e)
         return None
 
 
@@ -62,7 +62,7 @@ def _find_article_for_click(
     if start_article:
         found = False
         page_num = 1
-        logger.info("Searching for starting article: %s", ', '.join(start_article))
+        print("Searching for starting article: %s", ', '.join(start_article))
 
         while not found:
             articles = _initialize_articles(browser)
@@ -72,7 +72,7 @@ def _find_article_for_click(
                 found_word = next((word for word in start_article if word == article_text), None)
 
                 if found_word:
-                    logger.info("Found matching article: %s", found_word)
+                    print("Found matching article: %s", found_word)
                     found = True
                     break
 
@@ -80,12 +80,12 @@ def _find_article_for_click(
                 break
 
             page_num += 1
-            logger.info("Moving to page %s...", page_num)
+            print("Moving to page %s...", page_num)
             _navigate(browser, "next")
         return found_word, page_num
     
     else:
-        logger.info("No starting article found, navigating %s pages forward...", default_forward_pages - 1)
+        print("No starting article found, navigating %s pages forward...", default_forward_pages - 1)
         any(_navigate(browser, "next") for _ in range(default_forward_pages - 1))
 
         return None, default_forward_pages
@@ -99,7 +99,7 @@ def move_to_board(
     ) -> None:
     """Navigates to the specified article board."""
 
-    logger.info("Navigating to board: %s", board_name)
+    print("Navigating to board: %s", board_name)
 
     if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
         wait_time = random.uniform(2, 5)
@@ -109,13 +109,13 @@ def move_to_board(
     
     for a_tag in a_tags:
         if a_tag.text == board_name:
-            logger.info("Board '%s' found, clicking...", board_name)
+            print("Board '%s' found, clicking...", board_name)
             a_tag.click()
-            logger.info("Waiting for %s seconds after navigation...", wait_time)
+            print("Waiting for %s seconds after navigation...", wait_time)
             time.sleep(wait_time)
             return
     
-    logger.warning("Board '%s' not found!", board_name)
+    print("Board '%s' not found!", board_name)
 
 @exception_handler
 def find_starting_point(
@@ -132,12 +132,12 @@ def find_starting_point(
     Combines find_first_article and find_article_for_click into a single function.
     """
 
-    logger.info("Finding the starting point for auto-liking articles...")
+    print("Finding the starting point for auto-liking articles...")
 
     start_article = _find_first_article(logger, filename, encoding, num_lines, pattern)
     if start_article:
-        logger.info("Starting article found: %s", ', '.join(start_article))
+        print("Starting article found: %s", ', '.join(start_article))
     else:
-        logger.warning("No starting article found, starting from the first available page.")
+        print("No starting article found, starting from the first available page.")
 
     return _find_article_for_click(browser, logger, start_article, default_forward_pages, max_page_limit)

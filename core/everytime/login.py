@@ -24,23 +24,23 @@ def login_everytime(
         logger.error("Everytime ID and Password are None")
         raise ValueError("Everytime credentials are missing")
 
-    logger.info("Attempting to log in with ID: %s", my_id)
+    print("Attempting to log in with ID: %s", my_id)
 
     try:
         if browser.find_element(By.CSS_SELECTOR, "div#submenu"):
-            logger.info("Already logged in, skipping login process.")
+            print("Already logged in, skipping login process.")
             return False
     except NoSuchElementException:
-        logger.warning("Not logged in, proceeding with login.")
+        print("Not logged in, proceeding with login.")
 
     try:
         signin_button = browser.find_element(By.CSS_SELECTOR, "a.signin")
-        logger.info("Sign-in button found, clicking...")
+        print("Sign-in button found, clicking...")
         signin_button.click()
     except NoSuchElementException:
-        logger.warning("Sign-in button not found, skipping...")
+        print("Sign-in button not found, skipping...")
 
-    logger.info("Locating login form...")
+    print("Locating login form...")
     import time
     time.sleep(3)
     login_form = browser.find_element(By.CSS_SELECTOR, "form[method='post']")
@@ -49,20 +49,20 @@ def login_everytime(
     password_elem = login_form.find_element(By.NAME, "password")
     keep_checkbox = login_form.find_element(By.CLASS_NAME, "keep")
 
-    logger.info("Entering credentials...")
+    print("Entering credentials...")
     id_elem.send_keys(my_id)
     password_elem.send_keys(my_password)
 
-    logger.info("Checking 'Keep me logged in' checkbox...")
+    print("Checking 'Keep me logged in' checkbox...")
     keep_checkbox.click()
 
-    logger.info("Submitting login form...")
+    print("Submitting login form...")
     password_elem.send_keys(Keys.ENTER)
 
-    logger.info("Waiting for %s seconds after login attempt...", wait_time)
+    print("Waiting for %s seconds after login attempt...", wait_time)
     time.sleep(wait_time)
 
-    logger.info("Login process completed successfully.")
+    print("Login process completed successfully.")
     return True
 
 
