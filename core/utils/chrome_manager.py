@@ -298,7 +298,7 @@ class LinuxAdvancedStealthService:
                 print(f"Failed to execute Linux-specific stealth script: {e}")
 
 class ChromeDriverService(WebDriverController):
-    def __init__(self, args=None, paths=None, stealth_config=None):
+    def __init__(self, stealth_config=None):
         if SYSTEM == 'Linux':
             self.stealth_manager: LinuxAdvancedStealthService = LinuxAdvancedStealthService(stealth_config)
         else:

@@ -7,12 +7,12 @@ if __name__ == "__main__":
     
     # Everytime
     everytime_parser = subparsers.add_parser("everytime", help="Run Everytime auto-like")
-    everytime_parser.add_argument("--headless", action="store_true", help="Run in headless mode")
+    # everytime_parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
     # 실행
     args = parser.parse_args()
 
     if args.command == "everytime":
-        RunEverytimeAutoLike(headless=args.headless)
+        RunEverytimeAutoLike()
     else:
         parser.print_help()

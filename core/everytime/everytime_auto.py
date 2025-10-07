@@ -10,30 +10,14 @@ from core.everytime.transform import _selenium_error_transform
 from core.utils.chrome_manager import SYSTEM
 
 class RunEverytimeAutoLike(ChromeDriverService):
-    def __init__(self, headless, logging_file_path="./logs/everytime_autolike.log"):
+    def __init__(self, logging_file_path="./logs/everytime_autolike.log"):
         super().__init__()
         self.logging_file_path = logging_file_path
         os.makedirs('./logs', exist_ok=True)
         self.logger = GetLogger("logger_everytime", logging_file_path)
-        self.start_running(headless)
+        self.start_running()
         
     def get_id_password(self):
-        # # .env 파일 및 config.yaml 파일 불러오기
-        my_id, my_password = self.new_method()
-        # env_values = load_env()
-        # # .env에서 민감한 정보 가져오기
-        # my_id = env_values.get("EVERYTIME_USERNAME")
-        # my_password = env_values.get("EVERYTIME_PASSWORD")
-    
-        print("Everytime ID, Password: %s, %s", my_id, my_password)
-        
-        if not my_id or not my_password:
-            print("Everytime ID, Password are missing in .env file!")
-            raise
-
-        return my_id, my_password
-
-    def new_method(self):
         if SYSTEM == "Linux":
             my_id = os.environ.get('EVERYTIME_USERNAME')
             my_password = os.environ.get('EVERYTIME_PASSWORD')
@@ -43,13 +27,19 @@ class RunEverytimeAutoLike(ChromeDriverService):
             my_id = env_values.get("EVERYTIME_USERNAME")
             my_password = env_values.get("EVERYTIME_PASSWORD")
 
+        print("Everytime ID, Password: %s, %s", my_id, my_password)
+        
+        if not my_id or not my_password:
+            print("Everytime ID, Password are missing in .env file!")
+            raise
+
         return my_id, my_password
     
-    def start_running(self, headless):
+    def start_running(self):
         print("Starting Everytime auto-like...")
         
         try:
-            self.start(headless=headless, url="https://everytime.kr/")
+            self.start(url="https://everytime.kr/")
 
             # 크롬이 종료되었을 경우 예외 처리
             if not self.browser:
