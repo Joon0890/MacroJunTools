@@ -90,8 +90,8 @@ class WebDriverController:
 
     def navigate_to(self, url, maximize, wait):  
         self.browser.get(url)
-        # if maximize:
-        #     self.browser.maximize_window()
+        if maximize:
+            self.browser.maximize_window()
         self.browser.implicitly_wait(wait)
        
     def quit_driver(self):
