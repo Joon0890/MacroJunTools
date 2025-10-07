@@ -42,6 +42,7 @@ class WebDriverController:
         options.add_argument('--shm-size=2gb')  # 공유 메모리 크기 지정
     
         options.add_argument('--window-size=1920,1080')
+        options.add_argument('--window-position=0,0')
 
         # User Agent 설정
         options.add_argument(f'user-agent={get_user_agent()}')
