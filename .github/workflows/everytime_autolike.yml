@@ -10,75 +10,29 @@ on:
 
 # 어떤 작업을 수행할지 정의하는 부분
 jobs:
-  build:
-    runs-on: ubuntu-latest  # 실행 환경 (우분투 최신 버전)
-
+  run-script:
+    runs-on: ubuntu-latest
     steps:
-      # 1. 내 Repository의 코드를 Runner 환경에 가져오기
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            wget \
-            gnupg \
-            unzip \
-            curl \
-            xvfb \
-            libnss3 \
-            libatk-bridge2.0-0 \
-            libdrm2 \
-            libxcomposite1 \
-            libxdamage1 \
-            libxrandr2 \
-            libgbm1 \
-            libgtk-3-0 \
-            libasound2t64 \
-            libxss1 \
-            libxtst6 \
-            libpangocairo-1.0-0 \
-            libatk1.0-0 \
-            libcairo-gobject2 \
-            libgdk-pixbuf2.0-0
-            
-      # 2. Python 환경 설정
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'  # 사용 중인 파이썬 버전 입력
-
-      # 3. Chrome 설치 (Selenium Manager가 드라이버 자동 관리)
-      - name: Install Google Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          google-chrome --version  # 설치 확인용 로그
-
-      - name: Setup Virtual Display
-        run: |
-          export DISPLAY=:99
-          Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
-          sleep 3
-          
-      # 4. 필요한 패키지 설치
+      - uses: actions/checkout@v3
+      
+      # Chrome 설치
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@latest
+      
+      # 시스템 의존성 설치
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          
-      # 5. 메인 스크립트 실행 (headless 모드로)
-      - name: Run automation
-        run: python main.py everytime
-        env:
-          EVERYTIME_USERNAME: ${{ secrets.EVERYTIME_USERNAME }}
-          EVERYTIME_PASSWORD: ${{ secrets.EVERYTIME_PASSWORD }}
-
-      - name: Cleanup
-        if: always()
-        run: |
-          pkill -f chrome || true
-          pkill -f Xvfb || true
-
+          sudo apt-get update
+          sudo apt-get install -y libnss3 libgbm1 libasound2t64
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+      
+      - name: Run script
+        run: python main.py
       

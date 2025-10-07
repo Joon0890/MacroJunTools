@@ -8,10 +8,9 @@ from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import SessionNotCreatedException
 
-# SYSTEM = platform.system()
-SYSTEM = 'Linux'
+SYSTEM = platform.system()
 
-def get_user_agent():
+def get_user_agent():    
     if SYSTEM == "Windows":
         return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
     elif SYSTEM == "Linux":
@@ -31,45 +30,29 @@ class WebDriverController:
         options.add_argument('--headless=new')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-        
-        # 리눅스 헤드리스 특화 옵션
         options.add_argument('--disable-gpu')
+        
+        # 안정성 옵션
         options.add_argument('--disable-software-rasterizer')
-        options.add_argument('--disable-background-timer-throttling')
-        options.add_argument('--disable-backgrounding-occluded-windows')
-        options.add_argument('--disable-renderer-backgrounding')
-        options.add_argument('--disable-features=TranslateUI')
-        options.add_argument('--disable-ipc-flooding-protection')
-        
-        # 메모리 최적화
-        options.add_argument('--memory-pressure-off')
-        options.add_argument('--max_old_space_size=2048')
-        options.add_argument('--js-flags=--max-old-space-size=2048')
-        
-        # 네트워크 최적화
-        options.add_argument('--disable-background-networking')
-        options.add_argument('--disable-default-apps')
         options.add_argument('--disable-extensions')
-        options.add_argument('--disable-sync')
+        options.add_argument('--disable-background-networking')
         
-        # 렌더링 최적화
-        options.add_argument('--disable-images')
-        options.add_argument('--disable-javascript')  # JS가 필요없다면
-        options.add_argument('--disable-plugins')
+        # 메모리 최적화 (줄임)
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--shm-size=2gb')  # 공유 메모리 크기 지정
         
-        # 프로세스 관리
-        options.add_argument('--single-process')  # 단일 프로세스 모드
-        options.add_argument('--no-zygote')
+        # User Agent 설정
+        options.add_argument(f'user-agent={get_user_agent()}')
         
         # 임시 디렉토리 설정
         self._tmp_profile = tempfile.mkdtemp(prefix='chrome_headless_')
         options.add_argument(f'--user-data-dir={self._tmp_profile}')
-        options.add_argument(f'--data-path={self._tmp_profile}')
-        options.add_argument(f'--disk-cache-dir={self._tmp_profile}')
         
         # 원격 디버깅 비활성화 (헤드리스에서는 불필요)
-        options.add_argument('--remote-debugging-port=0')
-        # opts.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument('--remote-debugging-port=9222')
+        
+        options.add_argument('--log-level=3')  # 에러만 표시
+        options.add_argument('--silent')
 
         return options
 
@@ -118,38 +101,7 @@ class WebDriverController:
             shutil.rmtree(self._tmp_profile, ignore_errors=True)
             self._tmp_profile = None
 
-
-class WinAdvancedStealthService:
-    def __init__(self, stealth_config=None):
-        self.stealth_config = stealth_config or {
-            "languages": ["en-US", "en"],
-            "vendor": "Google Inc.",
-            "platform": "Win32",
-            "webgl_vendor": "Intel Inc.",
-            "renderer": "Intel Iris OpenGL Engine",
-            "fix_hairline": True
-        }
-
-    def apply_stealth(self, browser):
-        self._apply_stealth_library(browser, self.stealth_config)
-        self._apply_additional_stealth(browser)
-
-    def _apply_stealth_library(self, browser, stealth_config):
-        stealth(browser, **stealth_config)
-
-    def _apply_additional_stealth(self, browser: Chrome):
-        scripts = [
-            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})",
-            "window.navigator.chrome = {runtime: {}};",
-            "Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']})",
-            "Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]})",
-        ]
-
-        for script in scripts:
-            browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})
-
-
-class LinuxAdvancedStealthService:
+class AdvancedStealthService:
     def __init__(self, stealth_config=None):
         self.stealth_config = stealth_config or {
             "languages": ["ko-KR", "ko", "en-US", "en"],  # 한국어 우선
@@ -299,10 +251,7 @@ class LinuxAdvancedStealthService:
 
 class ChromeDriverService(WebDriverController):
     def __init__(self, stealth_config=None):
-        if SYSTEM == 'Linux':
-            self.stealth_manager: LinuxAdvancedStealthService = LinuxAdvancedStealthService(stealth_config)
-        else:
-            self.stealth_manager: WinAdvancedStealthService = WinAdvancedStealthService(stealth_config)
+        self.stealth_manager: AdvancedStealthService = AdvancedStealthService(stealth_config)
         super().__init__()
             
     def __enter__(self) -> "ChromeDriverService":
