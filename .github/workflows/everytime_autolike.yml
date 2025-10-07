@@ -70,7 +70,7 @@ jobs:
           
       # 5. 메인 스크립트 실행 (headless 모드로)
       - name: Run automation
-        run: python main.py everytime --headless
+        run: python main.py everytime
         env:
           EVERYTIME_USERNAME: ${{ secrets.EVERYTIME_USERNAME }}
           EVERYTIME_PASSWORD: ${{ secrets.EVERYTIME_PASSWORD }}
