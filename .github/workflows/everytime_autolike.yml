@@ -34,5 +34,5 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Run script
-        run: python main.py
+        run: python main.py everytime
       
