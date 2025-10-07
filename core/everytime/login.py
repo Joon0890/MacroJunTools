@@ -5,6 +5,8 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait as WW
+from selenium.webdriver.support import expected_conditions as EC
 from core.everytime.exception import exception_handler
 from core.utils.custom_logging import CustomLogging
 
@@ -17,6 +19,7 @@ def login_everytime(
     wait_time: Optional[int] = None
 ) -> Optional[bool]:
     """Logs in to the website."""
+    
     if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
         wait_time = random.uniform(2, 5)
 
@@ -34,33 +37,23 @@ def login_everytime(
         print("Not logged in, proceeding with login.")
 
     try:
-        signin_button = browser.find_element(By.CSS_SELECTOR, "a.signin")
-        print("Sign-in button found, clicking...")
+        signin_button = WW(browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a.signin")))
         signin_button.click()
+        print("Sign-in button found, clicking...")
     except NoSuchElementException:
         print("Sign-in button not found, skipping...")
 
     print("Locating login form...")
-    import time
-    time.sleep(3)
-    login_form = browser.find_element(By.CSS_SELECTOR, "form[method='post']")
+    login_form = WW(browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "form[method='post']")))
 
     id_elem = login_form.find_element(By.NAME, "id")
     password_elem = login_form.find_element(By.NAME, "password")
     keep_checkbox = login_form.find_element(By.CLASS_NAME, "keep")
 
-    print("Entering credentials...")
     id_elem.send_keys(my_id)
     password_elem.send_keys(my_password)
-
-    print("Checking 'Keep me logged in' checkbox...")
     keep_checkbox.click()
-
-    print("Submitting login form...")
     password_elem.send_keys(Keys.ENTER)
-
-    print("Waiting for %s seconds after login attempt...", wait_time)
-    time.sleep(wait_time)
 
     print("Login process completed successfully.")
     return True
