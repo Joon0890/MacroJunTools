@@ -16,14 +16,12 @@ def exception_handler(func):
         
         except NoSuchElementException as e:
             # The login method should continue even if an element is not found
-            raise NoSuchElementException(_selenium_error_transform(e))
+            raise _selenium_error_transform(e)
         
-        except (WebDriverException, NoSuchWindowException) as e:   
-            print("Terminating due to ChromeDriver connection failure.")
-            raise (WebDriverException, NoSuchWindowException)
+        except (WebDriverException, NoSuchWindowException) as e:
+            sys.exit("Terminating due to ChromeDriver connection failure.")
 
         except Exception as e:
-            print("Terminating due to an unknown error.")
-            raise
+            sys.exit("Terminating due to an unknown error.")
 
     return wrapper

@@ -28,7 +28,7 @@ class EverytimeAutoLiker:
 
     def _create_art_list(self, articles: List[WebElement], comparison_str: str) -> List[str]:
         """Generates a list of article titles, stopping at the comparison string."""
-        print("Creating article list, stopping at: %s", comparison_str)
+        self.logger.info("Creating article list, stopping at: %s", comparison_str)
 
         art_list = []
         for article in articles:
@@ -37,7 +37,7 @@ class EverytimeAutoLiker:
                 break
             art_list.append(title)
 
-        print("Generated article list with %s articles", len(art_list))
+        self.logger.info("Generated article list with %s articles", len(art_list))
         return art_list
 
     def _get_title_of_article(self, article: WebElement) -> str:
@@ -51,7 +51,7 @@ class EverytimeAutoLiker:
 
         try:
             alert = Alert(self.browser)
-            print("Alert detected, accepting...")
+            self.logger.info("Alert detected, accepting...")
             alert.accept()
 
             time.sleep(wait_time)
@@ -59,11 +59,11 @@ class EverytimeAutoLiker:
             time.sleep(wait_time)
 
         except:
-            print("No alert found.")
+            self.logger.warning("No alert found.")
             pass
 
         finally:
-            print("Returning to the previous page.")
+            self.logger.info("Returning to the previous page.")
             self.browser.back()
             time.sleep(wait_time)
 
@@ -76,29 +76,29 @@ class EverytimeAutoLiker:
             _scroll_into_view(self.browser, like_button)
             like_button.click()
 
-            print("Like button clicked.")
+            self.logger.info("Like button clicked.")
             self._click_alert()
         except Exception as e:
-            print("Failed to click like button: %s", e)
+            self.logger.error("Failed to click like button: %s", e)
 
     def _click_articles(self, article: WebElement, art_name: str, art_list: List[str], wait_time: Optional[int] = None) -> None:
         """Handles the liking of an individual article."""
         if wait_time is None:  # 호출될 때마다 새로운 랜덤 값 설정
             wait_time = random.uniform(2, 5)
 
-        print("Processing article: %s", art_name)
+        self.logger.info("Processing article: %s", art_name)
         
         _scroll_into_view(self.browser, article)
         article.click()
-        print("Clicked on article. Waiting for %s seconds before proceeding.", wait_time)
+        self.logger.info("Clicked on article. Waiting for %s seconds before proceeding.", wait_time)
         time.sleep(wait_time)
 
         article_name = self.browser.find_element(By.XPATH, "//h2[@class='large']").text
-        print("Article click completed: <%s>", article_name)
+        self.logger.info("Article click completed: <%s>", article_name)
         self._like_button_click()
 
         art_list.remove(art_name)
-        print("Removed %s from article list. Remaining articles: %s", art_name, len(art_list))
+        self.logger.info("Removed %s from article list. Remaining articles: %s", art_name, len(art_list))
 
     def _repeat_article_likes(self, art_list: List[str], changed_name: str = None) -> None:
         """Iterates through articles and likes them."""
@@ -107,10 +107,10 @@ class EverytimeAutoLiker:
 
             first_article = self._get_title_of_article(articles[0])
             if changed_name == first_article:
-                print("First article unchanged, stopping auto-like.")
+                self.logger.info("First article unchanged, stopping auto-like.")
                 break
 
-            print(
+            self.logger.debug(
                 "[First Article]: %s, [Articles Count]: %s, [Art List Count]: %s",
                 first_article, len(articles), len(art_list)
             )
@@ -127,18 +127,18 @@ class EverytimeAutoLiker:
 
     def run(self) -> None:
         """Likes articles from the starting point, navigating pages if necessary."""
-        print("Starting auto-like from article: %s, across %s pages", self.start_article, self.page_num)
+        self.logger.info("Starting auto-like from article: %s, across %s pages", self.start_article, self.page_num)
 
         for index in range(self.page_num):
             articles = _initialize_articles(self.browser)
             art_list = self._create_art_list(articles, self.start_article)
 
-            print("[Art List]: %s", ', '.join(art_list))
+            self.logger.debug("[Art List]: %s", ', '.join(art_list))
 
             self._repeat_article_likes(art_list)
 
             remaining_pages = self.page_num - index
-            print("20 articles clicked successfully, remaining pages: %s", remaining_pages)
+            self.logger.info("20 articles clicked successfully, remaining pages: %s", remaining_pages)
 
             _navigate(self.browser, "prev")
 
